@@ -38,16 +38,17 @@ class Board:
             i += 1
 
     def moveto(self, depart, arrive):
-        print(self.cases[self.coord.index(depart)].nom)
 
-        if str(self.cases[self.coord.index(depart)]) == "PION": #Un pion peu bouger
-            self.cases[self.coord.index(arrive)] = Piece("Pion")
+        if (self.cases[self.coord.index(depart)]._nom) == "PION": #Un pion peu bouger
+
+            self.cases[self.coord.index(arrive)] = Piece("PION")
             self.cases[self.coord.index(depart)] = Piece()
 
 
 
 table = Board()
 
+a = "baha"
 table.format_board()
 
 depart = input("move depuis:")
