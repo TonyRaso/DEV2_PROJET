@@ -1,4 +1,5 @@
 from piece import Piece
+
 INPUT_TO_PIECE = {"p": "PION", "f": "FOU", "d": "DAME", "t": "TOUR", "c": "CAVALIER"}
 
 COORD_INTERDIT = ['a15', 'b15', 'c15', 'd15', 'l15', 'm15', 'n15', 'o15',
@@ -101,13 +102,9 @@ class Board:
         i = 0
         toscreen = ""
         for j in self.cases:
-            if (str(j) == "PION"):
-                toscreen += "|" + " " * 4 + str(j) + " " * 4 + "|"
-            else:
-                toscreen += "| " + str(j) + " |"
+            toscreen += " " + str(j) + " "
             if i % 15 == 14:
-                print(''.join('{0:^32s}').format(toscreen))
-                print('\t')
+                print(toscreen, end='\n')
                 toscreen = ""
             i += 1
 

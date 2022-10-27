@@ -10,7 +10,7 @@ class Piece:
         self.couleur = couleur
 
     def __str__(self):
-        res = f" "
+        res = f"."
         if self.nom == "PION":
             res = "P"
         elif self.nom == "CAVALIER":
@@ -24,7 +24,7 @@ class Piece:
         elif self.nom == "FLAG":
             res = "O"
         elif self.nom == "INTERDIT":
-            res = "_"
+            res = " "
         return colored(res, self.couleur)
 
     def nom(self):
