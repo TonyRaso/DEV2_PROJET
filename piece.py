@@ -1,19 +1,31 @@
+from termcolor import colored
+
 LIST_PIECE = ["p"]
 
 
 class Piece:
-    def __init__(self, nom=""):
-        self._nom = nom
+
+    def __init__(self, nom="", couleur="white"):
+        self.nom = nom
+        self.couleur = couleur
 
     def __str__(self):
         res = f" "
-        if self._nom == "PION":
-            res = "X"
-        elif self._nom == "FLAG":
+        if self.nom == "PION":
+            res = "P"
+        elif self.nom == "CAVALIER":
+            res = "C"
+        elif self.nom == "FOU":
+            res = "F"
+        elif self.nom == "TOUR":
+            res = "T"
+        elif self.nom == "DAME":
+            res = "D"
+        elif self.nom == "FLAG":
             res = "O"
-        elif self._nom == "INTERDIT":
+        elif self.nom == "INTERDIT":
             res = "_"
-        return res
+        return colored(res, self.couleur)
 
     def nom(self):
-        return self._nom
+        return self.nom
