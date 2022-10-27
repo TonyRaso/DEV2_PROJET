@@ -13,7 +13,6 @@ class Game:
 
         while self.IsGameON:
             move = input("Quel pièce voulez vous déplacer vers quel case ? (Format, pf01f04 = pion en f01 vers f04) : ")
-            equipe = self.cases[board.COORD.index(move[1:4])].couleur
             if engine.verif_format_move(move):
                 table.moveto(table, move)
                 nombre_tour += 1
