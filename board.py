@@ -113,9 +113,17 @@ class Board:
         depart = move[1:4]
         arrive = move[4:7]
         equipe = self.cases[COORD.index(depart)].couleur
+        if self.cases[COORD.index(arrive)].nom != "" and self.cases[COORD.index(arrive)].couleur == equipe:
+            # Vérifie que la case n'est pas occupée
+            print("case occupée par une pièce alliée")
+            return
+
         if self.cases[COORD.index(depart)].nom == nomPiece:  # Vérifie que la pièce appellée est la bonne
             if arrive not in COORD_INTERDIT:  # Vérifie qu'on ne va pas dans des cases interdites
 
                 self.cases[COORD.index(arrive)] = Piece(nomPiece, equipe)
                 self.cases[COORD.index(depart)] = Piece()
+        else:
+            print("Coup invalide")
+
         table.format_board()
