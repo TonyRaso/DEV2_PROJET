@@ -1,0 +1,3 @@
+Rendu du plateau à chaque coup, 
+déplacement sépcial propre à chaque pièce
+Vérification qu'une pièce alliée n'est pas sur la case d'arrivée 

@@ -3,6 +3,7 @@ from piece import *
 
 LIST_PIECE = ["p", "c", "f", "t", "d"]
 
+vecteur_tour = [-1, 1, 15, -15]
 coup_cavalier = [29, 31, 13, 17, -17, -13, -31, -29]
 coup_tour = []
 coup_fou = []
