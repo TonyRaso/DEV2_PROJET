@@ -12,12 +12,15 @@ class Game:
         nombre_tour = 0
 
         while self.IsGameON:
-            move = input("Quel pièce voulez vous déplacer vers quel case ? (Format, pf01f04 = pion en f02 vers f03) : ")
-            if engine.verif_format_move(move) and engine.verif_deplacment(move, table):
-                table.moveto(table, move)
-                nombre_tour += 1
+            move = input("Quel pièce voulez vous déplacer vers quel case ? (Format, pf02f03 = pion en f02 vers f03) : ")
+            if engine.verif_format_move(move):
+                equipe = self.table.cases[board.COORD.index(move[1:4])].couleur
 
-            if nombre_tour == 3:
+                if engine.verif_deplacment(move, self.table, equipe):
+                    table.moveto(table, move, equipe)
+                    nombre_tour += 1
+
+            if nombre_tour == 10:
                 self.IsGameON = False
 
 

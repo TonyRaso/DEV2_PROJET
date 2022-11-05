@@ -22,7 +22,7 @@ class Piece:
         elif self.nom == "DAME":
             res = "D"
         elif self.nom == "FLAG":
-            res = "O"
+            res = "."
         elif self.nom == "INTERDIT":
             res = " "
         return colored(res, self.couleur)

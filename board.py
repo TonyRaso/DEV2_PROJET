@@ -64,7 +64,7 @@ class Board:
             Piece('PION', "yellow"), Piece('FOU', "yellow"),  # ligne 09
 
             Piece('DAME', "red"), Piece('PION', "red"),
-            Piece(), Piece(), Piece(), Piece(), Piece(), Piece(), Piece(), Piece(), Piece(), Piece(), Piece(),
+            Piece(), Piece(), Piece(), Piece(), Piece(), Piece("FLAG"), Piece(), Piece(), Piece(), Piece(), Piece(),
             Piece('PION', "yellow"), Piece('DAME', "yellow"),  # ligne 08
 
             Piece('FOU', "red"), Piece('PION', "red"),
@@ -108,11 +108,11 @@ class Board:
                 toscreen = ""
             i += 1
 
-    def moveto(self, table, move):
+    def moveto(self, table, move, equipe):
         nomPiece = INPUT_TO_PIECE[move[0]]
         depart = move[1:4]
         arrive = move[4:7]
-        equipe = self.cases[COORD.index(depart)].couleur
+
         if self.cases[COORD.index(arrive)].nom != "" and self.cases[COORD.index(arrive)].couleur == equipe:
             # Vérifie que la case n'est pas occupée
             print("case occupée par une pièce alliée")

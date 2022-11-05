@@ -3,7 +3,10 @@
   <component name="ChangeListManager">
     <list default="true" id="66541626-b853-414e-9db5-12657fb3d497" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/board.py" beforeDir="false" afterPath="$PROJECT_DIR$/board.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/engine.py" beforeDir="false" afterPath="$PROJECT_DIR$/engine.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/piece.py" beforeDir="false" afterPath="$PROJECT_DIR$/piece.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -56,7 +59,7 @@
       <workItem from="1666897151439" duration="846000" />
       <workItem from="1666978277267" duration="310000" />
       <workItem from="1667479798556" duration="5548000" />
-      <workItem from="1667674314063" duration="703000" />
+      <workItem from="1667674314063" duration="8559000" />
     </task>
     <servers />
   </component>
@@ -75,8 +78,8 @@
     </option>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/DEV2_PROJET$main.coverage" NAME="main Coverage Results" MODIFIED="1667674347622" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/DEV2_PROJET$engine.coverage" NAME="engine Coverage Results" MODIFIED="1667481317322" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/DEV2_PROJET$main.coverage" NAME="main Coverage Results" MODIFIED="1667682818817" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/DEV2_PROJET$engine.coverage" NAME="engine Coverage Results" MODIFIED="1667682724994" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/DEV2_PROJET$piece.coverage" NAME="piece Coverage Results" MODIFIED="1666290223963" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/DEV2_PROJET$board.coverage" NAME="board Coverage Results" MODIFIED="1667481461034" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
