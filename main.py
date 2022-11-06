@@ -10,7 +10,7 @@ class Game:
 
     def play(self):
         nombre_tour = 0
-
+        self.table.format_board()
         while self.IsGameON:
             move = input("Quel pièce voulez vous déplacer vers quel case ? (Format, pf02f03 = pion en f02 vers f03) : ")
             if engine.verif_format_move(move):
