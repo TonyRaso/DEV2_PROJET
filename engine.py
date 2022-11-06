@@ -33,7 +33,7 @@ def verif_piece_dans_vecteur(table, arrive, depart, vecteur):
                     # si une case n'est pas vide, return False
                     print("une pièce bloque le passage !")
                     return False
-                return True
+            return True
     print("coup invalide")
     return False
 
