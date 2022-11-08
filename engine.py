@@ -33,7 +33,8 @@ def verif_piece_dans_vecteur(table, arrive, depart, vecteur):
                     # si une case n'est pas vide, return False
                     print("une pièce bloque le passage !")
                     return False
-            return True
+            if distance > 0:  # uniquement si le déplacement est positif, sinon il risque de tombé dans le mauvais vecteur
+                return True
     print("coup invalide")
     return False
 
