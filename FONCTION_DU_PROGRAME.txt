@@ -1,3 +1,9 @@
 Rendu du plateau à chaque coup, 
 déplacement sépcial propre à chaque pièce
-Vérification qu'une pièce alliée n'est pas sur la case d'arrivée 
+Vérification qu'une pièce alliée n'est pas sur la case d'arrivée
+Vérification qu'aunce pièce ne bloque le chemin
+Création d'un tour et choix du nmbr de joueur (entre 2 et 4)
+Supprime les pièces qui ne jouent pas
+Ajout d'une fct qui vérifie si l'arrivée n'est pas une case interdite
+Compte les points après un tour
+Permet les contre-attaque

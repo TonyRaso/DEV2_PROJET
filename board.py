@@ -1,4 +1,7 @@
+import engine
 from piece import Piece
+
+JOUEURS_POSSIBLE = ["yellow", "blue", "red", "green"]
 
 INPUT_TO_PIECE = {"p": "PION", "f": "FOU", "d": "DAME", "t": "TOUR", "c": "CAVALIER"}
 
@@ -60,19 +63,24 @@ class Board:
             Piece('PION', "yellow"), Piece('CAVALIER', "yellow"),  # ligne 10
 
             Piece('FOU', "red"), Piece('PION', "red"),
-            Piece(), Piece(), Piece(), Piece(), Piece(), Piece(), Piece(), Piece(), Piece(), Piece(), Piece(),
+            Piece(), Piece(), Piece(), Piece(), Piece(), Piece('DAME', "red"), Piece(), Piece(), Piece(), Piece(),
+            Piece(),
             Piece('PION', "yellow"), Piece('FOU', "yellow"),  # ligne 09
 
             Piece('DAME', "red"), Piece('PION', "red"),
-            Piece(), Piece(), Piece(), Piece(), Piece(), Piece("FLAG"), Piece(), Piece(), Piece(), Piece(), Piece(),
-            Piece('PION', "yellow"), Piece('DAME', "yellow"),  # ligne 08
+            Piece(), Piece(), Piece(), Piece(), Piece('DAME', "blue"), Piece("FLAG", "white", True),
+            Piece('DAME', "yellow"), Piece(), Piece(),
+            Piece(), Piece(),
+            Piece('PION', "yellow"), Piece('PION', "yellow"),  # ligne 08
 
             Piece('FOU', "red"), Piece('PION', "red"),
-            Piece(), Piece(), Piece(), Piece(), Piece(), Piece(), Piece(), Piece(), Piece(), Piece(), Piece(),
+            Piece(), Piece(), Piece(), Piece(), Piece(), Piece('PION', "green"), Piece(), Piece(), Piece(), Piece(),
+            Piece(),
             Piece('PION', "yellow"), Piece('FOU', "yellow"),  # ligne 07
 
             Piece('CAVALIER', "red"), Piece('PION', "red"),
-            Piece(), Piece(), Piece(), Piece(), Piece(), Piece(), Piece(), Piece(), Piece(), Piece(), Piece(),
+            Piece(), Piece(), Piece(), Piece(), Piece(), Piece('DAME', "green"), Piece(), Piece(), Piece(), Piece(),
+            Piece(),
             Piece('PION', "yellow"), Piece('CAVALIER', "yellow"),  # ligne 06
 
             Piece('TOUR', "red"), Piece('PION', "red"),
@@ -98,31 +106,81 @@ class Board:
             Piece('INTERDIT'), Piece('INTERDIT'), Piece('INTERDIT'), Piece('INTERDIT'),  # ligne 01
         ]
 
-    def format_board(self):
+    def format_board(self, joueurs=""):
+        if joueurs != "":  # c'est qu'on appelle la fonction avec un argument, donc au tout début
+            piece_a_retirer = []
+            for joueur in JOUEURS_POSSIBLE:
+                if joueur not in joueurs:
+                    piece_a_retirer.append(joueur)
+            for case in self.cases:
+                if case.equipe in piece_a_retirer:
+                    if case.equipe == "green":
+                        self.cases[self.cases.index(case) - 30] = Piece("INTERDIT")
+                    elif case.equipe == "blue":
+                        self.cases[self.cases.index(case) + 30] = Piece("INTERDIT")
+                    elif case.equipe == "red":
+                        self.cases[self.cases.index(case) + 2] = Piece("INTERDIT")
+                    elif case.equipe == "yellow":
+                        self.cases[self.cases.index(case) - 2] = Piece("INTERDIT")
+                    # on a retirer les 2 collonnes/rangées devant les équipes qui ne jouent pas
+
+                    self.cases[self.cases.index(case)] = Piece("INTERDIT")  # on retire les pièces qui ne jouent pas
+        print("_"*46 + "\t")
         i = 0
         toscreen = ""
         for j in self.cases:
             toscreen += " " + str(j) + " "
             if i % 15 == 14:
-                print(toscreen, end='\n')
+                print(toscreen, end=' \n')
                 toscreen = ""
             i += 1
 
-    def moveto(self, table, move, equipe):
+    def contre_attaque(self, table, equipe_en_jeu):
+        self.format_board()
+        contre_attaque_finie = False
+        while not contre_attaque_finie:
+            print("tour du joueur", equipe_en_jeu)
+            move = input("Quel pièce voulez vous déplacer vers quel case ? (Format, pf02f03 = pion en f02 vers f03) : ")
+
+            if engine.verif_format_move(move) \
+                    and engine.is_place_occupee(table, move, equipe_en_jeu) and engine.is_case_interdit(table, move):
+                # vérifie si format correct et place libre et case pas interdite
+
+                if equipe_en_jeu != table.cases[COORD.index(move[1:4])].equipe:
+                    # vérifie si le pion déplacé est le bon
+                    print("Vous ne possédez pas de pion sur cette case!")
+
+                if engine.verif_deplacment(move, table, equipe_en_jeu):  # on peut jouer le coup
+                    table.moveto(table, move, equipe_en_jeu, True)
+                    contre_attaque_finie = True
+
+    def moveto(self, table, move, equipe, contre_attaque=False):
         nomPiece = INPUT_TO_PIECE[move[0]]
         depart = move[1:4]
         arrive = move[4:7]
 
-        if self.cases[COORD.index(arrive)].nom != "" and self.cases[COORD.index(arrive)].couleur == equipe:
-            # Vérifie que la case n'est pas occupée
-            print("case occupée par une pièce alliée")
-            return
-
         if self.cases[COORD.index(depart)].nom == nomPiece:  # Vérifie que la pièce appellée est la bonne
-            if arrive not in COORD_INTERDIT:  # Vérifie qu'on ne va pas dans des cases interdites
+            if self.cases[COORD.index(arrive)].Is_flag and self.cases[COORD.index(arrive)].equipe == "white":
+                # si on arrive sur le flag neutre
+                self.cases[COORD.index(arrive)] = Piece(nomPiece, equipe, True)
+                self.cases[COORD.index(depart)] = Piece()
+                table.format_board()
 
+            elif self.cases[COORD.index(arrive)].Is_flag and self.cases[
+                COORD.index(arrive)].equipe != "white" and not contre_attaque:
+                # si on arrive sur flag déjà pris et que ce n'est pas une contre attaque
+                equipe_contre_attaque = self.cases[COORD.index(arrive)].equipe
+                self.cases[COORD.index(arrive)] = Piece(nomPiece, equipe, True)
+                self.cases[COORD.index(depart)] = Piece()
+                if engine.contre_attaque_sur_flag(table, move, self.cases[COORD.index(arrive)].equipe):
+                    #si un coup est possible on lance la contre-attaque
+                    self.contre_attaque(table, equipe_contre_attaque)  # contre attaque !
+
+            else:
                 self.cases[COORD.index(arrive)] = Piece(nomPiece, equipe)
                 self.cases[COORD.index(depart)] = Piece()
+                table.format_board()
+
         else:
             print("Coup invalide")
 
