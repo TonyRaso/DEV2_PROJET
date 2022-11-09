@@ -79,7 +79,7 @@ class Board:
             Piece('PION', "yellow"), Piece('FOU', "yellow"),  # ligne 07
 
             Piece('CAVALIER', "red"), Piece('PION', "red"),
-            Piece(), Piece(), Piece(), Piece(), Piece(), Piece('DAME', "green"), Piece(), Piece(), Piece(), Piece(),
+            Piece(), Piece(), Piece(), Piece(), Piece(), Piece("DAME", "green"), Piece(), Piece(), Piece(), Piece(),
             Piece(),
             Piece('PION', "yellow"), Piece('CAVALIER', "yellow"),  # ligne 06
 
@@ -125,7 +125,7 @@ class Board:
                     # on a retirer les 2 collonnes/rangées devant les équipes qui ne jouent pas
 
                     self.cases[self.cases.index(case)] = Piece("INTERDIT")  # on retire les pièces qui ne jouent pas
-        print("_"*46 + "\t")
+        print("_" * 46 + "\t")
         i = 0
         toscreen = ""
         for j in self.cases:
@@ -140,11 +140,16 @@ class Board:
         contre_attaque_finie = False
         while not contre_attaque_finie:
             print("tour du joueur", equipe_en_jeu)
-            move = input("Quel pièce voulez vous déplacer vers quel case ? (Format, pf02f03 = pion en f02 vers f03) : ")
-
+            move = input(
+                "Quel pièce voulez vous déplacer vers quel case ? (Format, pf02f03 = pion en f02 vers f03),"
+                " vous êtes en contre-attaque, tapez 'pass' pour ne pas jouer: ")
+            if move == "pass":
+                return
             if engine.verif_format_move(move) \
-                    and engine.is_place_occupee(table, move, equipe_en_jeu) and engine.is_case_interdit(table, move):
+                    and engine.is_place_occupee(table, move, equipe_en_jeu) and engine.is_case_interdit(table, move) \
+                    and move in engine.Is_contre_attaque_sur_flag_possible(table, equipe_en_jeu):
                 # vérifie si format correct et place libre et case pas interdite
+                # et coup dans les coups autorisé en contre-attaque
 
                 if equipe_en_jeu != table.cases[COORD.index(move[1:4])].equipe:
                     # vérifie si le pion déplacé est le bon
@@ -172,8 +177,8 @@ class Board:
                 equipe_contre_attaque = self.cases[COORD.index(arrive)].equipe
                 self.cases[COORD.index(arrive)] = Piece(nomPiece, equipe, True)
                 self.cases[COORD.index(depart)] = Piece()
-                if engine.contre_attaque_sur_flag(table, move, self.cases[COORD.index(arrive)].equipe):
-                    #si un coup est possible on lance la contre-attaque
+                if engine.Is_contre_attaque_sur_flag_possible(table, equipe_contre_attaque):
+                    # si un coup est possible on lance la contre-attaque
                     self.contre_attaque(table, equipe_contre_attaque)  # contre attaque !
 
             else:

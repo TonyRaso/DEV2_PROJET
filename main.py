@@ -4,12 +4,14 @@ import engine
 
 
 class Game:
-    def __init__(self, table, joueurs, nombre_tour=0):
+    def __init__(self, table, joueurs, nombre_tour=0, nmbr_tour_plateau=0):
         self.IsGameON = True
         self.table = table
         self.joueurs = joueurs
         self.nombre_tour = nombre_tour
+        self.nmbr_tour_plateau = nmbr_tour_plateau
         self.points_joueur = {}
+        self.Isdrapeu_neutre = True
 
     def joueur_prochain(self, equipe_en_cours):
         joueur = self.joueurs[self.joueurs.index(equipe_en_cours) - 1]
@@ -43,9 +45,26 @@ class Game:
 
                     if self.table.cases[board.COORD.index("h08")].equipe != "white":  # drapeau pris par une équipe
                         self.points_joueur[self.table.cases[board.COORD.index("h08")].equipe] += 5
+                        self.Isdrapeu_neutre = False
                         print(self.points_joueur)
+
                     equipe_en_jeu = self.joueur_prochain(equipe_en_jeu)
+
                     self.nombre_tour += 1
+                    if self.nombre_tour % len(self.joueurs):  # compte le nmbr de tour de plateau
+                        self.nmbr_tour_plateau += 1
+
+            if self.nmbr_tour_plateau == 10 and self.Isdrapeu_neutre:  # drapeau pas pris avant le 10ème tour de plateau
+                for i in range(len(self.joueurs)): # on met des malus
+                    self.points_joueur[self.joueurs[-i]] -= (20 - 5 * i)
+                self.IsGameON = False
+
+            for equipe in self.joueurs:
+                if self.points_joueur[equipe] >= 100:
+                    # partie finie si on joueur gagne 100pts
+                    self.points_joueur[equipe] += 20
+                    self.IsGameON = False
+
             if self.nombre_tour == 100:
                 self.IsGameON = False
 

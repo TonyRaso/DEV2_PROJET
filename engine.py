@@ -56,7 +56,7 @@ def is_place_occupee(table, move, equipe):
     return True
 
 
-def verif_piece_dans_vecteur(table, arrive, depart, vecteur):
+def verif_piece_dans_vecteur(table, arrive, depart, vecteur, print_enable = True):
     for n in vecteur:
         if ((COORD.index(arrive) - COORD.index(depart)) / n) % 1 == 0:  # si une directions est possible
             distance = int((COORD.index(arrive) - COORD.index(depart)) / n)
@@ -64,15 +64,18 @@ def verif_piece_dans_vecteur(table, arrive, depart, vecteur):
             for k in range(1, distance):  # pour chaque case entre le départ et l'arrivée
                 if table.cases[(COORD.index(depart) + k * n)].nom != "":
                     # si une case n'est pas vide, return False
-                    print("une pièce bloque le passage !")
+                    if print_enable:
+                        print("une pièce bloque le passage !")
                     return False
-            if distance > 0:  # uniquement si le déplacement est positif, sinon il risque de tombé dans le mauvais vecteur
+            if distance > 0:
+                # uniquement si le déplacement est positif, sinon il risque de tombé dans le mauvais vecteur
                 return True
-    print("coup invalide")
+    if print_enable:
+        print("coup invalide")
     return False
 
 
-def verif_deplacment(move, table, equipe):
+def verif_deplacment(move, table, equipe, print_enable=True):
     piece = move[0]
     depart = move[1:4]
     arrive = move[4:7]
@@ -84,7 +87,8 @@ def verif_deplacment(move, table, equipe):
                 14, 16]:
                 return True
             else:
-                print("coup impossible")
+                if print_enable:
+                    print("coup impossible")
                 return False
         elif equipe == "blue":
             if COORD.index(arrive) - COORD.index(depart) == 15:
@@ -93,7 +97,8 @@ def verif_deplacment(move, table, equipe):
                 14, 16]:
                 return True
             else:
-                print("coup impossible")
+                if print_enable:
+                    print("coup impossible")
                 return False
         elif equipe == "red":
             if COORD.index(arrive) - COORD.index(depart) == 1:
@@ -102,7 +107,8 @@ def verif_deplacment(move, table, equipe):
                 -14, 16]:
                 return True
             else:
-                print("coup impossible")
+                if print_enable:
+                    print("coup impossible")
                 return False
         elif equipe == "yellow":
             if COORD.index(depart) - COORD.index(arrive) == 1:
@@ -111,18 +117,20 @@ def verif_deplacment(move, table, equipe):
                 16, -14]:
                 return True
             else:
-                print("coup impossible")
+                if print_enable:
+                    print("coup impossible")
                 return False
 
     elif piece == "c":
         if COORD.index(arrive) - COORD.index(depart) in coup_cavalier:
             return True
         else:
-            print("coup impossible")
+            if print_enable:
+                print("coup impossible")
             return False
 
     elif piece == "f":
-        return verif_piece_dans_vecteur(table, arrive, depart, vecteur_fou)  # deplacement diagonale
+        return verif_piece_dans_vecteur(table, arrive, depart, vecteur_fou, print_enable)  # deplacement diagonale
 
     elif piece == "t":
         if depart[1:4] == arrive[1:4]:  # déplacement horizontal
@@ -130,11 +138,12 @@ def verif_deplacment(move, table, equipe):
                            max(COORD.index(arrive), COORD.index(depart))):
                 # parcour le plateau entre les deux cases depart et arrivée
                 if table.cases[k].nom != "":
-                    print("une pièce bloque le passage !")
+                    if print_enable:
+                        print("une pièce bloque le passage !")
                     return False
             return True
 
-        return verif_piece_dans_vecteur(table, arrive, depart, vecteur_tour)  # deplacement vetrical
+        return verif_piece_dans_vecteur(table, arrive, depart, vecteur_tour, print_enable)  # deplacement vetrical
 
     elif piece == "d":
         if depart[1:4] == arrive[1:4]:  # déplacement horizontal
@@ -143,27 +152,28 @@ def verif_deplacment(move, table, equipe):
                            max(COORD.index(arrive), COORD.index(depart))):
                 # parcour le plateau entre les deux cases depart et arrivée
                 if table.cases[k].nom != "":
-                    print("une pièce bloque le passage !")
+                    if print_enable:
+                        print("une pièce bloque le passage !")
                     return False
             return True
 
-        return verif_piece_dans_vecteur(table, arrive, depart, vecteur_dame)  # deplacement vetrical + diagonale
+        return verif_piece_dans_vecteur(table, arrive, depart, vecteur_dame, print_enable)  # deplacement vetrical + diagonale
 
 
-def contre_attaque_sur_flag(table, move, equipe):
+def Is_contre_attaque_sur_flag_possible(table, equipe):
     coup_possible = []
     case_flag = "h08"
     for case in table.cases:
         if case.equipe == equipe:
-            move = case.nom[0].lower() + "h07" + case_flag
-            if verif_deplacment(move, table, equipe):
+            move = case.nom[0].lower() + COORD[table.cases.index(case)] + case_flag
+            if verif_deplacment(move, table, equipe, False):
                 coup_possible.append(move)
 
-    if len(coup_possible)==0:
+    if len(coup_possible) == 0:
         print("pas de contre-attaque possible")
         return False
     else:
         print("les coups possible sont:")
         for coup in coup_possible:
             print(coup)
-        return True
+        return coup_possible
