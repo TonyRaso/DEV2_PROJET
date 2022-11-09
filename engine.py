@@ -44,8 +44,11 @@ def verif_deplacment(move, table, equipe):
     depart = move[1:4]
     arrive = move[4:7]
     if piece == "p":
-        if equipe == "green":
+                if equipe == "green":
             if COORD.index(depart) - COORD.index(arrive) == 15:
+                return True
+            elif table.cases[COORD.index(arrive)].equipe != "white" and COORD.index(depart) - COORD.index(arrive) in [
+                14, 16]:
                 return True
             else:
                 print("coup impossible")
@@ -53,17 +56,26 @@ def verif_deplacment(move, table, equipe):
         elif equipe == "blue":
             if COORD.index(arrive) - COORD.index(depart) == 15:
                 return True
+            elif table.cases[COORD.index(arrive)].equipe != "white" and COORD.index(arrive) - COORD.index(depart) in [
+                14, 16]:
+                return True
             else:
                 print("coup impossible")
                 return False
         elif equipe == "red":
             if COORD.index(arrive) - COORD.index(depart) == 1:
                 return True
+            elif table.cases[COORD.index(arrive)].equipe != "white" and COORD.index(arrive) - COORD.index(depart) in [
+                -14, 16]:
+                return True
             else:
                 print("coup impossible")
                 return False
         elif equipe == "yellow":
             if COORD.index(depart) - COORD.index(arrive) == 1:
+                return True
+            elif table.cases[COORD.index(arrive)].equipe != "white" and COORD.index(depart) - COORD.index(arrive) in [
+                16, -14]:
                 return True
             else:
                 print("coup impossible")
