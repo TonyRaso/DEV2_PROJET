@@ -81,7 +81,7 @@ def verif_deplacment(move, table, equipe, print_enable=True):
     arrive = move[4:7]
     if piece == "p":
         if equipe == "green":
-            if COORD.index(depart) - COORD.index(arrive) == 15:
+            if COORD.index(depart) - COORD.index(arrive) == 15 and table.cases[COORD.index(arrive)].equipe == "white":
                 return True
             elif table.cases[COORD.index(arrive)].equipe != "white" and COORD.index(depart) - COORD.index(arrive) in [
                 14, 16]:
@@ -91,7 +91,7 @@ def verif_deplacment(move, table, equipe, print_enable=True):
                     print("coup impossible")
                 return False
         elif equipe == "blue":
-            if COORD.index(arrive) - COORD.index(depart) == 15:
+            if COORD.index(arrive) - COORD.index(depart) == 15 and table.cases[COORD.index(arrive)].equipe == "white":
                 return True
             elif table.cases[COORD.index(arrive)].equipe != "white" and COORD.index(arrive) - COORD.index(depart) in [
                 14, 16]:
@@ -101,7 +101,7 @@ def verif_deplacment(move, table, equipe, print_enable=True):
                     print("coup impossible")
                 return False
         elif equipe == "red":
-            if COORD.index(arrive) - COORD.index(depart) == 1:
+            if COORD.index(arrive) - COORD.index(depart) == 1 and table.cases[COORD.index(arrive)].equipe == "white":
                 return True
             elif table.cases[COORD.index(arrive)].equipe != "white" and COORD.index(arrive) - COORD.index(depart) in [
                 -14, 16]:
@@ -111,7 +111,7 @@ def verif_deplacment(move, table, equipe, print_enable=True):
                     print("coup impossible")
                 return False
         elif equipe == "yellow":
-            if COORD.index(depart) - COORD.index(arrive) == 1:
+            if COORD.index(depart) - COORD.index(arrive) == 1 and table.cases[COORD.index(arrive)].equipe == "white":
                 return True
             elif table.cases[COORD.index(arrive)].equipe != "white" and COORD.index(depart) - COORD.index(arrive) in [
                 16, -14]:
