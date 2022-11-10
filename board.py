@@ -1,16 +1,9 @@
 from piece import Piece
 
-INPUT_TO_PIECE = {"p": "PION", "f": "FOU", "d": "DAME", "t": "TOUR", "c": "CAVALIER"}
+JOUEURS_POSSIBLE = ["yellow", "blue", "red", "green"]
 
-COORD_INTERDIT = ['a15', 'b15', 'c15', 'd15', 'l15', 'm15', 'n15', 'o15',
-                  'a14', 'b14', 'c14', 'd14', 'l14', 'm14', 'n14', 'o14',
-                  'a13', 'b13', 'c13', 'd13', 'l13', 'm13', 'n13', 'o13',
-                  'a12', 'b12', 'c12', 'd12', 'l12', 'm12', 'n12', 'o12',
-                  'a04', 'b04', 'c04', 'd04', 'l04', 'm04', 'n04', 'o04',
-                  'a03', 'b03', 'c03', 'd03', 'l03', 'm03', 'n03', 'o03',
-                  'a02', 'b02', 'c02', 'd02', 'l02', 'm02', 'n02', 'o02',
-                  'a01', 'b01', 'c01', 'd01', 'l01', 'm01', 'n01', 'o01',
-                  ]
+INPUT_VERS_PIECE = {"p": "PION", "f": "FOU", "d": "DAME", "t": "TOUR", "c": "CAVALIER"}
+
 COORD = [
     'a15', 'b15', 'c15', 'd15', 'e15', 'f15', 'g15', 'h15', 'i15', 'j15', 'k15', 'l15', 'm15', 'n15', 'o15',
     'a14', 'b14', 'c14', 'd14', 'e14', 'f14', 'g14', 'h14', 'i14', 'j14', 'k14', 'l14', 'm14', 'n14', 'o14',
@@ -30,7 +23,7 @@ COORD = [
 ]
 
 
-class Board:
+class Plateau:
     def __init__(self):
         self.cases = [
             Piece('INTERDIT'), Piece('INTERDIT'), Piece('INTERDIT'), Piece('INTERDIT'),
@@ -60,19 +53,24 @@ class Board:
             Piece('PION', "yellow"), Piece('CAVALIER', "yellow"),  # ligne 10
 
             Piece('FOU', "red"), Piece('PION', "red"),
-            Piece(), Piece(), Piece(), Piece(), Piece(), Piece(), Piece(), Piece(), Piece(), Piece(), Piece(),
+            Piece(), Piece(), Piece(), Piece(), Piece(), Piece(), Piece(), Piece(), Piece(), Piece(),
+            Piece(),
             Piece('PION', "yellow"), Piece('FOU', "yellow"),  # ligne 09
 
             Piece('DAME', "red"), Piece('PION', "red"),
-            Piece(), Piece(), Piece(), Piece(), Piece(), Piece("FLAG"), Piece(), Piece(), Piece(), Piece(), Piece(),
-            Piece('PION', "yellow"), Piece('DAME', "yellow"),  # ligne 08
+            Piece(), Piece(), Piece(), Piece(), Piece(), Piece("FLAG", "white"),
+            Piece(), Piece(), Piece(),
+            Piece(), Piece(),
+            Piece('PION', "yellow"), Piece('PION', "yellow"),  # ligne 08
 
             Piece('FOU', "red"), Piece('PION', "red"),
-            Piece(), Piece(), Piece(), Piece(), Piece(), Piece(), Piece(), Piece(), Piece(), Piece(), Piece(),
+            Piece(), Piece(), Piece(), Piece(), Piece(), Piece(), Piece(), Piece(), Piece(), Piece(),
+            Piece(),
             Piece('PION', "yellow"), Piece('FOU', "yellow"),  # ligne 07
 
             Piece('CAVALIER', "red"), Piece('PION', "red"),
-            Piece(), Piece(), Piece(), Piece(), Piece(), Piece(), Piece(), Piece(), Piece(), Piece(), Piece(),
+            Piece(), Piece(), Piece(), Piece(), Piece(), Piece(), Piece(), Piece(), Piece(), Piece(),
+            Piece(),
             Piece('PION', "yellow"), Piece('CAVALIER', "yellow"),  # ligne 06
 
             Piece('TOUR', "red"), Piece('PION', "red"),
@@ -98,32 +96,27 @@ class Board:
             Piece('INTERDIT'), Piece('INTERDIT'), Piece('INTERDIT'), Piece('INTERDIT'),  # ligne 01
         ]
 
-    def format_board(self):
+    def afficher_plateau(self):
         i = 0
-        toscreen = ""
+        ligne = ""
         for j in self.cases:
-            toscreen += " " + str(j) + " "
+            ligne += " " + str(j) + " "
             if i % 15 == 14:
-                print(toscreen, end='\n')
-                toscreen = ""
+                print(ligne,  end=' \n')
+                ligne = ""
             i += 1
 
-    def moveto(self, table, move, equipe):
-        nomPiece = INPUT_TO_PIECE[move[0]]
-        depart = move[1:4]
-        arrive = move[4:7]
+    def deplacement(self, table, coup, equipe):
+        nom_piece = INPUT_VERS_PIECE[coup[0]]
+        depart = coup[1:4]
+        arrive = coup[4:7]
 
-        if self.cases[COORD.index(arrive)].nom != "" and self.cases[COORD.index(arrive)].couleur == equipe:
-            # Vérifie que la case n'est pas occupée
-            print("case occupée par une pièce alliée")
-            return
+        if self.cases[COORD.index(depart)].nom == nom_piece:  # Vérifie que la pièce appellée est la bonne
 
-        if self.cases[COORD.index(depart)].nom == nomPiece:  # Vérifie que la pièce appellée est la bonne
-            if arrive not in COORD_INTERDIT:  # Vérifie qu'on ne va pas dans des cases interdites
+            self.cases[COORD.index(arrive)] = Piece(nom_piece, equipe)
+            self.cases[COORD.index(depart)] = Piece()
+            table.afficher_plateau()
 
-                self.cases[COORD.index(arrive)] = Piece(nomPiece, equipe)
-                self.cases[COORD.index(depart)] = Piece()
         else:
             print("Coup invalide")
 
-        table.format_board()

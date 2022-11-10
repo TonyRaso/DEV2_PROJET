@@ -1,13 +1,11 @@
 from termcolor import colored
 
-LIST_PIECE = ["p"]
-
 
 class Piece:
 
-    def __init__(self, nom="", couleur="white"):
+    def __init__(self, nom="", equipe="white"):
         self.nom = nom
-        self.couleur = couleur
+        self.equipe = equipe
 
     def __str__(self):
         res = f"."
@@ -22,10 +20,10 @@ class Piece:
         elif self.nom == "DAME":
             res = "D"
         elif self.nom == "FLAG":
-            res = "."
+            res = "X"
         elif self.nom == "INTERDIT":
             res = " "
-        return colored(res, self.couleur)
+        return colored(res, self.equipe)
 
     def nom(self):
         return self.nom
