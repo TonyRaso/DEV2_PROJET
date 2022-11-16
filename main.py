@@ -22,7 +22,7 @@ class Game:
             self.points_joueur[joueur] = 0
 
     def play(self):
-        self.table.format_board(self.joueurs)
+        self.table.afficher_plateau(self.joueurs)
         equipe_en_jeu = self.joueur_prochain("yellow")
         self.init_point_joueur()
         # force la première équipe à jouer à être après le yellow ( donc green -> red -> blue )
@@ -31,7 +31,7 @@ class Game:
             print("tour du joueur", equipe_en_jeu)
             move = input("Quel pièce voulez vous déplacer vers quel case ? (Format, pf02f03 = pion en f02 vers f03) : ")
 
-            if engine.verif_format_move(move) \
+            if engine.verif_format_coup(move) \
                     and engine.is_place_occupee(table, move, equipe_en_jeu) and engine.is_case_interdit(table, move):
                 # vérifie si format correct et place libre et case pas interdite
 
@@ -84,6 +84,6 @@ if __name__ == "__main__":
     joueurs = ["yellow", "blue", "red", "green"]
     joueurs = joueurs[0:int(nmbr_joueurs)]
 
-    table = board.Board()
+    table = board.Plateau()
     Game1 = Game(table, joueurs)
     Game1.play()

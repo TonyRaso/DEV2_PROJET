@@ -25,13 +25,13 @@ vecteur_dame = [-15, 15, -16, 16, -14, 14]
 coup_cavalier = [29, 31, 13, 17, -17, -13, -31, -29]
 
 
-def verif_format_move(move):
-    if len(move) == 0:
+def verif_format_coup(coup):
+    if len(coup) == 0:
         print("Format non valide")
         return False
-    piece = move[0]
-    depart = move[1:4]
-    arrive = move[4:7]
+    piece = coup[0]
+    depart = coup[1:4]
+    arrive = coup[4:7]
     if (piece in LIST_PIECE) and (depart in COORD) and (arrive in COORD):
         return True
     else:
