@@ -39,30 +39,30 @@ def verif_format_coup(coup):
         return False
 
 
-def is_case_interdit(table, move):
+def is_case_interdit(plateau, move):
     arrive = move[4:7]
-    if table.cases[COORD.index(arrive)].nom == "INTERDIT":
+    if plateau.cases[COORD.index(arrive)].nom == "INTERDIT":
         print("Case d'arrivée interdite !")
         return False
     return True
 
 
-def is_place_occupee(table, move, equipe):
+def is_place_occupee(plateau, move, equipe):
     arrive = move[4:7]
-    if table.cases[COORD.index(arrive)].nom != "" and table.cases[COORD.index(arrive)].equipe == equipe:
+    if plateau.cases[COORD.index(arrive)].nom != "" and plateau.cases[COORD.index(arrive)].equipe == equipe:
         # Vérifie que la case n'est pas occupée
         print("case occupée par une pièce alliée")
         return False
     return True
 
 
-def verif_piece_dans_vecteur(table, arrive, depart, vecteur, print_enable = True):
+def verif_piece_dans_vecteur(plateau, arrive, depart, vecteur, print_enable=True):
     for n in vecteur:
         if ((COORD.index(arrive) - COORD.index(depart)) / n) % 1 == 0:  # si une directions est possible
             distance = int((COORD.index(arrive) - COORD.index(depart)) / n)
             # trouve la distance entre le départ et l'arrivée
             for k in range(1, distance):  # pour chaque case entre le départ et l'arrivée
-                if table.cases[(COORD.index(depart) + k * n)].nom != "":
+                if plateau.cases[(COORD.index(depart) + k * n)].nom != "":
                     # si une case n'est pas vide, return False
                     if print_enable:
                         print("une pièce bloque le passage !")
@@ -75,15 +75,15 @@ def verif_piece_dans_vecteur(table, arrive, depart, vecteur, print_enable = True
     return False
 
 
-def verif_deplacment(move, table, equipe, print_enable=True):
+def verif_deplacment(move, plateau, equipe, print_enable=True):
     piece = move[0]
     depart = move[1:4]
     arrive = move[4:7]
     if piece == "p":
         if equipe == "green":
-            if COORD.index(depart) - COORD.index(arrive) == 15 and table.cases[COORD.index(arrive)].equipe == "white":
+            if COORD.index(depart) - COORD.index(arrive) == 15 and plateau.cases[COORD.index(arrive)].equipe == "white":
                 return True
-            elif table.cases[COORD.index(arrive)].equipe != "white" and COORD.index(depart) - COORD.index(arrive) in [
+            elif plateau.cases[COORD.index(arrive)].equipe != "white" and COORD.index(depart) - COORD.index(arrive) in [
                 14, 16]:
                 return True
             else:
@@ -91,9 +91,9 @@ def verif_deplacment(move, table, equipe, print_enable=True):
                     print("coup impossible")
                 return False
         elif equipe == "blue":
-            if COORD.index(arrive) - COORD.index(depart) == 15 and table.cases[COORD.index(arrive)].equipe == "white":
+            if COORD.index(arrive) - COORD.index(depart) == 15 and plateau.cases[COORD.index(arrive)].equipe == "white":
                 return True
-            elif table.cases[COORD.index(arrive)].equipe != "white" and COORD.index(arrive) - COORD.index(depart) in [
+            elif plateau.cases[COORD.index(arrive)].equipe != "white" and COORD.index(arrive) - COORD.index(depart) in [
                 14, 16]:
                 return True
             else:
@@ -101,9 +101,9 @@ def verif_deplacment(move, table, equipe, print_enable=True):
                     print("coup impossible")
                 return False
         elif equipe == "red":
-            if COORD.index(arrive) - COORD.index(depart) == 1 and table.cases[COORD.index(arrive)].equipe == "white":
+            if COORD.index(arrive) - COORD.index(depart) == 1 and plateau.cases[COORD.index(arrive)].equipe == "white":
                 return True
-            elif table.cases[COORD.index(arrive)].equipe != "white" and COORD.index(arrive) - COORD.index(depart) in [
+            elif plateau.cases[COORD.index(arrive)].equipe != "white" and COORD.index(arrive) - COORD.index(depart) in [
                 -14, 16]:
                 return True
             else:
@@ -111,9 +111,9 @@ def verif_deplacment(move, table, equipe, print_enable=True):
                     print("coup impossible")
                 return False
         elif equipe == "yellow":
-            if COORD.index(depart) - COORD.index(arrive) == 1 and table.cases[COORD.index(arrive)].equipe == "white":
+            if COORD.index(depart) - COORD.index(arrive) == 1 and plateau.cases[COORD.index(arrive)].equipe == "white":
                 return True
-            elif table.cases[COORD.index(arrive)].equipe != "white" and COORD.index(depart) - COORD.index(arrive) in [
+            elif plateau.cases[COORD.index(arrive)].equipe != "white" and COORD.index(depart) - COORD.index(arrive) in [
                 16, -14]:
                 return True
             else:
@@ -130,20 +130,20 @@ def verif_deplacment(move, table, equipe, print_enable=True):
             return False
 
     elif piece == "f":
-        return verif_piece_dans_vecteur(table, arrive, depart, vecteur_fou, print_enable)  # deplacement diagonale
+        return verif_piece_dans_vecteur(plateau, arrive, depart, vecteur_fou, print_enable)  # deplacement diagonale
 
     elif piece == "t":
         if depart[1:4] == arrive[1:4]:  # déplacement horizontal
             for k in range(min(COORD.index(arrive), COORD.index(depart)) + 1,
                            max(COORD.index(arrive), COORD.index(depart))):
                 # parcour le plateau entre les deux cases depart et arrivée
-                if table.cases[k].nom != "":
+                if plateau.cases[k].nom != "":
                     if print_enable:
                         print("une pièce bloque le passage !")
                     return False
             return True
 
-        return verif_piece_dans_vecteur(table, arrive, depart, vecteur_tour, print_enable)  # deplacement vetrical
+        return verif_piece_dans_vecteur(plateau, arrive, depart, vecteur_tour, print_enable)  # deplacement vetrical
 
     elif piece == "d":
         if depart[1:4] == arrive[1:4]:  # déplacement horizontal
@@ -151,22 +151,23 @@ def verif_deplacment(move, table, equipe, print_enable=True):
             for k in range(min(COORD.index(arrive), COORD.index(depart)) + 1,
                            max(COORD.index(arrive), COORD.index(depart))):
                 # parcour le plateau entre les deux cases depart et arrivée
-                if table.cases[k].nom != "":
+                if plateau.cases[k].nom != "":
                     if print_enable:
                         print("une pièce bloque le passage !")
                     return False
             return True
 
-        return verif_piece_dans_vecteur(table, arrive, depart, vecteur_dame, print_enable)  # deplacement vetrical + diagonale
+        return verif_piece_dans_vecteur(plateau, arrive, depart, vecteur_dame,
+                                        print_enable)  # deplacement vetrical + diagonale
 
 
-def Is_contre_attaque_sur_flag_possible(table, equipe):
+def Is_contre_attaque_sur_flag_possible(plateau, equipe):
     coup_possible = []
     case_flag = "h08"
-    for case in table.cases:
+    for case in plateau.cases:
         if case.equipe == equipe:
-            move = case.nom[0].lower() + COORD[table.cases.index(case)] + case_flag
-            if verif_deplacment(move, table, equipe, False):
+            move = case.nom[0].lower() + COORD[plateau.cases.index(case)] + case_flag
+            if verif_deplacment(move, plateau, equipe, False):
                 coup_possible.append(move)
 
     if len(coup_possible) == 0:
@@ -177,3 +178,40 @@ def Is_contre_attaque_sur_flag_possible(table, equipe):
         for coup in coup_possible:
             print(coup)
         return coup_possible
+
+
+def Is_drapeau_prenable(plateau):
+    equipe_drapeau = plateau.cases[COORD.index("h08")].equipe
+    for piece in plateau.cases:
+        if piece.equipe != equipe_drapeau:
+            # on regarde les pièces restantes ennemies
+            if piece == "DAME" or piece == "TOUR" or piece == "CAVALIER" or piece.nom == "FOU":
+                # si il y a une dame ou tour ou cavalier, on joue
+                # si un fou se trouve sur les case %2==0, donc dans l'alignement du drapeau mais tt les fous le sont
+                return True
+
+            # pour les pions, regarder où ils sont
+            elif piece.equipe == "green":
+                if (COORD[plateau.cases.index(piece)][0] == "g" or COORD[plateau.cases.index(piece)][0] == "i") \
+                        and COORD[plateau.cases.index(piece)][1:3] <= "07":
+                    # dans la bonne colonne et pas au-dessus du drapeau
+                    return True
+            elif piece.equipe == "blue":
+                if (COORD[plateau.cases.index(piece)][0] == "g" or COORD[plateau.cases.index(piece)][0] == "i") \
+                        and COORD[plateau.cases.index(piece)][1:3] >= "09":
+                    # dans la bonne colonne et pas au-dessus du drapeau
+                    return True
+            elif piece.equipe == "red":
+                if COORD[plateau.cases.index(piece)][0] in ["b", "c", "d", "e", "f", "g"] and (
+                        COORD[plateau.cases.index(piece)][1:3] == "07" or COORD[plateau.cases.index(piece)][
+                                                                          1:3] == "09"):
+                    # dans la bonne colonne et pas au-dessus du drapeau
+                    return True
+            elif piece.equipe == "yellow":
+                if COORD[plateau.cases.index(piece)][0] in ["i", "j", "k", "l", "m", "n"] and (
+                        COORD[plateau.cases.index(piece)][1:3] == "07" or COORD[plateau.cases.index(piece)][
+                                                                          1:3] == "09"):
+                    # dans la bonne colonne et pas au-dessus du drapeau
+                    return True
+        else:
+            return False

@@ -74,7 +74,8 @@ class Plateau:
             Piece('PION', "yellow"), Piece('PION', "yellow"),  # ligne 08
 
             Piece('FOU', "red"), Piece('PION', "red"),
-            Piece(), Piece(), Piece(), Piece(), Piece(), Piece(), Piece("PION", "yellow"), Piece(), Piece(), Piece(),
+            Piece(), Piece(), Piece(), Piece(), Piece(), Piece("DAME", "green"), Piece("PION", "yellow"), Piece(),
+            Piece(), Piece(),
             Piece(),
             Piece('PION', "yellow"), Piece('FOU', "yellow"),  # ligne 07
 
@@ -132,7 +133,7 @@ class Plateau:
         for j in self.cases:
             affiche += " " + str(j) + " "
             if i % 15 == 14:
-                print(affiche, compteur_linge,  end=' \n')
+                print(affiche, compteur_linge, end=' \n')
                 compteur_linge -= 1
                 affiche = ""
             i += 1
@@ -149,8 +150,10 @@ class Plateau:
             if coup == "pass":
                 return
             if engine.verif_format_coup(coup) \
-                    and engine.is_place_occupee(plateau, coup, equipe_en_jeu) and engine.is_case_interdit(plateau, coup) \
-                    and coup in engine.Is_contre_attaque_sur_flag_possible(plateau, equipe_en_jeu):
+                    and engine.is_place_occupee(plateau, coup, equipe_en_jeu) and engine.is_case_interdit(plateau,
+                                                                                                          coup) \
+                    and coup in engine.Is_contre_attaque_sur_flag_possible(
+                plateau, equipe_en_jeu):
                 # vérifie si format correct et place libre et case pas interdite
                 # et coup dans les coups autorisé en contre-attaque
 
@@ -159,22 +162,21 @@ class Plateau:
                     print("Vous ne possédez pas de pion sur cette case!")
 
                 if engine.verif_deplacment(coup, plateau, equipe_en_jeu):  # on peut jouer le coup
-                    plateau.moveto(plateau, coup, equipe_en_jeu, True)
+                    plateau.deplacement(plateau, coup, equipe_en_jeu, True)
                     contre_attaque_finie = True
 
-    def moveto(self, plateau, coup, equipe, contre_attaque=False):
+    def deplacement(self, plateau, coup, equipe, contre_attaque=False):
         nom_piece = INPUT_VERS_PIECE[coup[0]]
         depart = coup[1:4]
         arrive = coup[4:7]
 
         if self.cases[COORD.index(depart)].nom == nom_piece:  # Vérifie que la pièce appellée est la bonne
-            if self.cases[COORD.index(arrive)].est_drapeau and self.cases[COORD.index(arrive)].equipe == "white":
+            if self.cases[COORD.index(arrive)].Is_drapeau and self.cases[COORD.index(arrive)].equipe == "white":
                 # si on arrive sur le flag neutre
                 self.cases[COORD.index(arrive)] = Piece(nom_piece, equipe, True)
                 self.cases[COORD.index(depart)] = Piece()
-                plateau.afficher_plateau()
 
-            elif self.cases[COORD.index(arrive)].est_drapeau and self.cases[
+            elif self.cases[COORD.index(arrive)].Is_drapeau and self.cases[
                 COORD.index(arrive)].equipe != "white" and not contre_attaque:
                 # si on arrive sur flag déjà pris et que ce n'est pas une contre attaque
                 equipe_contre_attaque = self.cases[COORD.index(arrive)].equipe
@@ -187,7 +189,6 @@ class Plateau:
             else:
                 self.cases[COORD.index(arrive)] = Piece(nom_piece, equipe)
                 self.cases[COORD.index(depart)] = Piece()
-                plateau.afficher_plateau()
 
         else:
             print("Coup invalide")

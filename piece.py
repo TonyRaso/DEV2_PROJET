@@ -1,11 +1,12 @@
 from termcolor import colored
 
+
 class Piece:
 
-    def __init__(self, nom="", equipe="white", est_drapeau=False):
+    def __init__(self, nom="", equipe="white", Is_drapeau=False):
         self.nom = nom
         self.equipe = equipe
-        self.est_drapeau = est_drapeau
+        self.Is_drapeau = Is_drapeau
 
     def __str__(self):
         res = f"."
