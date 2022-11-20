@@ -18,9 +18,9 @@
     -Pas de prise de drapeau après 5tours (en fin de partie)
     -Si personne ne peut reprendre le drapeau
   Points bonus/malus de fin de partie  
+  Ecrire les pts dans un fichier externe pour pouvoir regarder en fin de semaine
   
 -à faire (et pas dans TonyFaitDesTrucs):
 
-  Ecrire les pts dans un fichier externe pour pouvoir regarder en fin de semaine
 
   Interface Grpahique
