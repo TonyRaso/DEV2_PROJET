@@ -213,5 +213,5 @@ def Is_drapeau_prenable(plateau):
                                                                           1:3] == "09"):
                     # dans la bonne colonne et pas au-dessus du drapeau
                     return True
-        else:
-            return False
+
+        return False

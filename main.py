@@ -1,6 +1,7 @@
 import board
 import piece
 import engine
+import json
 
 
 class Game:
@@ -36,6 +37,49 @@ class Game:
         print(self.points_joueur)
         print("Féliciation au joueur " + joueur_gagnant + " !!!")
         self.Is_jeu_en_cours = False
+
+    def ajout_score(self):
+        data = json.dumps(self.points_joueur)
+        with open('data.txt', "a") as file:
+            file.write(data + "\n")
+
+    def afficher_score(self):
+        self.ajout_score()
+        try:
+            file = open('data.txt')
+        except FileNotFoundError:
+            print('Fichier introuvable.')
+        equipes = {"green": 0, "red": 0, "blue": 0, "yellow": 0, }
+        for line in file:
+            dic = json.loads(line)
+            for equipe in dic:
+                equipes[equipe] += dic[equipe]
+        min_pts = 999
+        for joueur in equipes:
+            if equipes[joueur] <= min_pts:
+                min_pts = equipes[joueur]
+                joueur_perdant = joueur
+
+        print("le joueur qui a perdu est " + joueur_perdant + "\nvoici les scores exact :" + str(equipes))
+        print("les score ont été réinitialisé")
+        with open('data.txt', "w") as file:
+            file.write("")
+
+    def gestionscore(self):
+        print("\n La partie est Finie !")
+        Is_input_ok = False
+        while not Is_input_ok:
+            afficher_score = input(
+                "Voulez-vous réinitialiser les scores et afficher les scores depuis la dernière fois ? ('oui'/'non')")
+            if afficher_score == "oui":
+                self.afficher_score()
+                Is_input_ok = True
+
+            elif afficher_score == "non":
+                self.ajout_score()
+                Is_input_ok = True
+            else:
+                print("input incorrect")
 
     def jeu(self):
         self.plateau.afficher_plateau(self.joueurs)
@@ -99,6 +143,10 @@ class Game:
 
             if self.nombre_tour == 100:
                 self.Is_jeu_en_cours = False
+
+        if not self.Is_jeu_en_cours:
+            # jeu fini
+            self.gestionscore()
 
 
 if __name__ == "__main__":
