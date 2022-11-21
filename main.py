@@ -5,7 +5,8 @@ import json
 
 
 class Game:
-    def __init__(self, plateau, joueurs, nombre_tour=0, nmbr_tour_plateau=0):
+    def __init__(self, plateau=board.Plateau(), joueurs=["yellow", "blue", "red", "green"], nombre_tour=0,
+                 nmbr_tour_plateau=0):
         self.Is_jeu_en_cours = True
         self.plateau = plateau
         self.joueurs = joueurs

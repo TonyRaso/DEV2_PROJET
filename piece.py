@@ -9,7 +9,7 @@ class Piece:
         self.Is_drapeau = Is_drapeau
 
     def __str__(self):
-        res = f"."
+        res = "."
         if self.nom == "PION":
             res = "P"
         elif self.nom == "CAVALIER":
@@ -24,4 +24,4 @@ class Piece:
             res = "X"
         elif self.nom == "INTERDIT":
             res = " "
-        return colored(res, self.equipe)
+        return res
