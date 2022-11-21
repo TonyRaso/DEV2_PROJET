@@ -15,29 +15,6 @@ class Game:
         self.Is_drapeu_neutre = True
         self.count_tour_drapeau_neutre = 0
 
-    def joueur_prochain(self, equipe_en_cours):
-        joueur = self.joueurs[self.joueurs.index(equipe_en_cours) - 1]
-        return joueur
-
-    def init_point_joueur(self):
-        for joueur in self.joueurs:
-            self.points_joueur[joueur] = 0
-
-    def joueur_max_point(self):
-        max_points = -1
-        joueur_gagnant = ""
-        for joueur in self.joueurs:
-            if self.points_joueur[joueur] >= max_points:
-                max_points = self.points_joueur[joueur]
-                joueur_gagnant = joueur
-        return joueur_gagnant
-
-    def fin_partie(self, joueur_gagnant):
-        self.points_joueur[joueur_gagnant] += 20
-        print(self.points_joueur)
-        print("Féliciation au joueur " + joueur_gagnant + " !!!")
-        self.Is_jeu_en_cours = False
-
     def ajout_score(self):
         data = json.dumps(self.points_joueur)
         with open('data.txt', "a") as file:
@@ -64,6 +41,29 @@ class Game:
         print("les score ont été réinitialisé")
         with open('data.txt', "w") as file:
             file.write("")
+
+    def joueur_prochain(self, equipe_en_cours):
+        joueur = self.joueurs[self.joueurs.index(equipe_en_cours) - 1]
+        return joueur
+
+    def init_point_joueur(self):
+        for joueur in self.joueurs:
+            self.points_joueur[joueur] = 0
+
+    def joueur_max_point(self):
+        max_points = -1
+        joueur_gagnant = ""
+        for joueur in self.joueurs:
+            if self.points_joueur[joueur] >= max_points:
+                max_points = self.points_joueur[joueur]
+                joueur_gagnant = joueur
+        return joueur_gagnant
+
+    def fin_partie(self, joueur_gagnant):
+        self.points_joueur[joueur_gagnant] += 20
+        print(self.points_joueur)
+        print("Féliciation au joueur " + joueur_gagnant + " !!!")
+        self.Is_jeu_en_cours = False
 
     def gestionscore(self):
         print("\n La partie est Finie !")

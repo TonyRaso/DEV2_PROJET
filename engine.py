@@ -214,4 +214,4 @@ def Is_drapeau_prenable(plateau):
                     # dans la bonne colonne et pas au-dessus du drapeau
                     return True
 
-        return False
+    return False
