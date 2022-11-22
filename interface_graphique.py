@@ -3,86 +3,13 @@ import board
 import engine
 import sys
 from piece import Piece
+from main import Jeu
 
-from main import Game
-
-LARGEUR = HAUTEUR = 512
+LARGEUR = HAUTEUR = 600
 DIMENSION = 15
 TAILLE_CASE = HAUTEUR // DIMENSION
 IMAGES = {}
 p.init()
-
-board = [
-    Piece('INTERDIT'), Piece('INTERDIT'), Piece('INTERDIT'), Piece('INTERDIT'),
-    Piece('TOUR', "blue"), Piece('CAVALIER', "blue"), Piece('FOU', "blue"), Piece('DAME', "blue"),
-    Piece('FOU', "blue"), Piece('CAVALIER', "blue"), Piece('TOUR', "blue"),
-    Piece('INTERDIT'), Piece('INTERDIT'), Piece('INTERDIT'), Piece('INTERDIT'),  # ligne 15
-
-    Piece('INTERDIT'), Piece('INTERDIT'), Piece('INTERDIT'), Piece('INTERDIT'),
-    Piece('PION', "blue"), Piece('PION', "blue"), Piece('PION', "blue"), Piece('PION', "blue"),
-    Piece('PION', "blue"), Piece('PION', "blue"), Piece('PION', "blue"),
-    Piece('INTERDIT'), Piece('INTERDIT'), Piece('INTERDIT'), Piece('INTERDIT'),  # ligne 14
-
-    Piece('INTERDIT'), Piece('INTERDIT'), Piece('INTERDIT'), Piece('INTERDIT'),
-    Piece(''), Piece(''), Piece(''), Piece(''), Piece(''), Piece(''), Piece(''),
-    Piece('INTERDIT'), Piece('INTERDIT'), Piece('INTERDIT'), Piece('INTERDIT'),  # ligne 13
-
-    Piece('INTERDIT'), Piece('INTERDIT'), Piece('INTERDIT'), Piece('INTERDIT'),
-    Piece(''), Piece(''), Piece(''), Piece(''), Piece(''), Piece(''), Piece(''),
-    Piece('INTERDIT'), Piece('INTERDIT'), Piece('INTERDIT'), Piece('INTERDIT'),  # ligne 12
-
-    Piece('TOUR', "red"), Piece('PION', "red"),
-    Piece(), Piece(), Piece(), Piece(), Piece(), Piece(), Piece(), Piece(), Piece(), Piece(), Piece(),
-    Piece('PION', "yellow"), Piece('TOUR', "yellow"),  # ligne 11
-
-    Piece('CAVALIER', "red"), Piece('PION', "red"),
-    Piece(), Piece(), Piece(), Piece(), Piece(), Piece(), Piece(), Piece(), Piece(), Piece(), Piece(),
-    Piece('PION', "yellow"), Piece('CAVALIER', "yellow"),  # ligne 10
-
-    Piece('FOU', "red"), Piece('PION', "red"),
-    Piece(), Piece(), Piece(), Piece(), Piece(), Piece('DAME', "red"), Piece(), Piece(), Piece(), Piece(),
-    Piece(),
-    Piece('PION', "yellow"), Piece('FOU', "yellow"),  # ligne 09
-
-    Piece('DAME', "red"), Piece('PION', "red"),
-    Piece(), Piece(), Piece(), Piece(), Piece('DAME', "blue"), Piece("FLAG", "white", True),
-    Piece('DAME', "yellow"), Piece(), Piece(),
-    Piece(), Piece(),
-    Piece('PION', "yellow"), Piece('PION', "yellow"),  # ligne 08
-
-    Piece('FOU', "red"), Piece('PION', "red"),
-    Piece(), Piece(), Piece(), Piece(), Piece(), Piece("DAME", "green"), Piece("PION", "yellow"), Piece(),
-    Piece(), Piece(),
-    Piece(),
-    Piece('PION', "yellow"), Piece('FOU', "yellow"),  # ligne 07
-
-    Piece('CAVALIER', "red"), Piece('PION', "red"),
-    Piece(), Piece(), Piece(), Piece(), Piece(), Piece(), Piece(), Piece(), Piece(), Piece(),
-    Piece(),
-    Piece('PION', "yellow"), Piece('CAVALIER', "yellow"),  # ligne 06
-
-    Piece('TOUR', "red"), Piece('PION', "red"),
-    Piece(), Piece(), Piece(), Piece(), Piece(), Piece(), Piece(), Piece(), Piece(), Piece(), Piece(),
-    Piece('PION', "yellow"), Piece('TOUR', "yellow"),  # ligne 05
-
-    Piece('INTERDIT'), Piece('INTERDIT'), Piece('INTERDIT'), Piece('INTERDIT'),
-    Piece(''), Piece(''), Piece(''), Piece(''), Piece(''), Piece(''), Piece(''),
-    Piece('INTERDIT'), Piece('INTERDIT'), Piece('INTERDIT'), Piece('INTERDIT'),  # ligne 04
-
-    Piece('INTERDIT'), Piece('INTERDIT'), Piece('INTERDIT'), Piece('INTERDIT'),
-    Piece(''), Piece(''), Piece(''), Piece(''), Piece(''), Piece(''), Piece(''),
-    Piece('INTERDIT'), Piece('INTERDIT'), Piece('INTERDIT'), Piece('INTERDIT'),  # ligne 03
-
-    Piece('INTERDIT'), Piece('INTERDIT'), Piece('INTERDIT'), Piece('INTERDIT'),
-    Piece('PION', "green"), Piece('PION', "green"), Piece('PION', "green"), Piece('PION', "green"),
-    Piece('PION', "green"), Piece('PION', "green"), Piece('PION', "green"),
-    Piece('INTERDIT'), Piece('INTERDIT'), Piece('INTERDIT'), Piece('INTERDIT'),  # ligne 02
-
-    Piece('INTERDIT'), Piece('INTERDIT'), Piece('INTERDIT'), Piece('INTERDIT'),
-    Piece('TOUR', "green"), Piece('CAVALIER', "green"), Piece('FOU', "green"), Piece('DAME', "green"),
-    Piece('FOU', "green"), Piece('CAVALIER', "green"), Piece('TOUR', "green"),
-    Piece('INTERDIT'), Piece('INTERDIT'), Piece('INTERDIT'), Piece('INTERDIT'),  # ligne 01
-]
 
 ecran = p.display.set_mode((LARGEUR, HAUTEUR))
 
@@ -92,50 +19,18 @@ def charge_images():
     Initialize a global directory of images.
     This will be called exactly once in the main.
     """
-    pieces = ["P", "C", "F", "T", "D", "X"]
+    pieces = ["Pred", "Cred", "Fred", "Tred", "Dred", "Pblue", "Cblue", "Fblue", "Tblue", "Dblue", "Pyellow", "Cyellow",
+              "Fyellow", "Tyellow", "Dyellow", "Pgreen", "Cgreen", "Fgreen", "Tgreen", "Dgreen", "Xwhite", "white"]
     for piece in pieces:
         IMAGES[piece] = p.transform.scale(p.image.load("images/" + piece + ".png"), (TAILLE_CASE, TAILLE_CASE))
 
 
-def jeu_visuel():
-    clock = p.time.Clock()
-    ecran.fill(p.Color("white"))
-    case_cliquee = ()
-    clique_joueur = []
-    ecran.fill(p.Color("white"))
-    equipe = "green"
-
-    charge_images()
-    while True:
-        for e in p.event.get():
-            if e.type == p.QUIT:
-                p.quit()
-                sys.exit()
-            clock.tick(15)
-            p.display.flip()
-            drawGameState(ecran)
-
-            # mouse handler
-            # elif e.type == p.MOUSEBUTTONDOWN:
-            #   if not Is_jeu_en_cours:
-            #      location = p.mouse.get_pos()  # (x, y) location of the mouse
-            #     col = location[0] // TAILLE_CASE
-            #    row = location[1] // TAILLE_CASE
-            #   if case_cliquee == (row, col) or col >= 8:  # user clicked the same square twice
-            #      square_selected = ()  # deselect
-            #     clique_joueur = []  # clear clicks
-            # else:
-            #   square_selected = (row, col)
-            #  clique_joueur.append(square_selected)  # append for both 1st and 2nd click
-            # if len(clique_joueur) == 2:  # after 2nd click
-            #   move = (clique_joueur[0], clique_joueur[1], board)
-
-            #  if engine.verif_deplacment(move, plateau, equipe):
-            #     plateau.deplacement(move)
-            #    move_made = True
-            #   animate = True
-            #  square_selected = ()  # reset user clicks
-            # clique_joueur = []
+def drawGameState(ecran, plateau):
+    """
+    Responsible for all the graphics within current game state.
+    """
+    drawBoard(ecran)  # draw squares on the board
+    drawPieces(ecran, plateau)  # draw pieces on top of those squares
 
 
 def afficher_plateau():
@@ -152,14 +47,6 @@ def afficher_plateau():
                         p.Rect(column * TAILLE_CASE, row * TAILLE_CASE, TAILLE_CASE, TAILLE_CASE))
 
 
-def drawGameState(ecran):
-    """
-    Responsible for all the graphics within current game state.
-    """
-    drawBoard(ecran)  # draw squares on the board
-    drawPieces(ecran)  # draw pieces on top of those squares
-
-
 def drawBoard(screen):
     """
     Draw the squares on the board.
@@ -173,18 +60,132 @@ def drawBoard(screen):
             p.draw.rect(screen, color, p.Rect(column * TAILLE_CASE, row * TAILLE_CASE, TAILLE_CASE, TAILLE_CASE))
 
 
-def drawPieces(screen):
+def drawPieces(screen, plateau):
     """
     Draw the pieces on the board using the current game_state.board
     """
     count = 0
     for row in range(15):
         for col in range(15):
-            piece = str(board[count])
+            piece = str(plateau[count])
             if piece != "." and piece != " ":
-                screen.blit(IMAGES[piece], p.Rect(col * TAILLE_CASE, row * TAILLE_CASE, TAILLE_CASE, TAILLE_CASE))
+                screen.blit(IMAGES[piece + plateau[count].equipe],
+                            p.Rect(col * TAILLE_CASE, row * TAILLE_CASE, TAILLE_CASE, TAILLE_CASE))
+            elif piece == " ":
+                screen.blit(IMAGES[plateau[count].equipe],
+                            p.Rect(col * TAILLE_CASE, row * TAILLE_CASE, TAILLE_CASE, TAILLE_CASE))
             count += 1
 
 
+class GUI_jeu(Jeu):
+    def __init__(self, plateau=board.Plateau(), joueurs=None, nombre_tour=0, nmbr_tour_plateau=0):
+        super().__init__(plateau, joueurs, nombre_tour, nmbr_tour_plateau)
 
-jeu_visuel()
+    def jeu_visuel(self):
+        clock = p.time.Clock()
+        ecran.fill(p.Color("white"))
+        case_cliquee = 0
+        clique_joueur = []
+        ecran.fill(p.Color("white"))
+
+        equipe_en_jeu = self.joueur_prochain("yellow")
+        self.init_point_joueur()
+        charge_images()
+        while self.Is_jeu_en_cours:
+            for e in p.event.get():
+                if e.type == p.QUIT:
+                    p.quit()
+                    sys.exit()
+
+                # mouse handler
+                elif e.type == p.MOUSEBUTTONDOWN:
+                    if self.Is_jeu_en_cours:
+                        location = p.mouse.get_pos()  # (x, y) location of the mouse
+                        col = location[0] // TAILLE_CASE
+                        row = location[1] // TAILLE_CASE
+                        index = (col + row * 15)
+
+                        if case_cliquee == index or col >= DIMENSION:  # user clicked the same square twice
+                            case_cliquee = 0  # deselect
+                            clique_joueur = []  # clear clicks
+                        else:
+                            case_cliquee = index
+                            clique_joueur.append(case_cliquee)  # append for both 1st and 2nd click
+                        print(clique_joueur)
+                        if len(clique_joueur) == 2:  # after 2nd click on joue
+                            equipe_piece = self.plateau.cases[clique_joueur[0]].equipe
+                            move = str(self.plateau.cases[clique_joueur[0]]).lower() + board.COORD[clique_joueur[0]] + \
+                                   board.COORD[clique_joueur[1]]
+                            print(move)
+                            if engine.verif_format_coup(move) \
+                                    and engine.is_place_occupee(self.plateau, move,
+                                                                equipe_en_jeu) and engine.is_case_interdit(self.plateau,
+                                                                                                           move):
+                                # vérifie si format correct et place libre et case pas interdite
+                                if equipe_en_jeu != self.plateau.cases[board.COORD.index(move[1:4])].equipe:
+                                    # vérifie si le pion déplacé est le bon
+                                    case_cliquee = 0  # reset user clicks
+                                    clique_joueur = []
+                                    continue
+
+                                if engine.verif_deplacment(move, self.plateau, equipe_en_jeu):  # on peut jouer le coup
+                                    self.plateau.deplacement(self.plateau, move, equipe_en_jeu)
+
+                                    if self.plateau.cases[
+                                        board.COORD.index("h08")].equipe != "white":  # drapeau pris par une équipe
+                                        self.points_joueur[self.plateau.cases[board.COORD.index("h08")].equipe] += 5
+                                        self.Is_drapeu_neutre = False
+                                        # si le drapeau est pris, compteur de tour de drapeau neutre = 0
+                                        self.count_tour_drapeau_neutre = 0
+                                        print(self.points_joueur)
+
+                                    equipe_en_jeu = self.joueur_prochain(equipe_en_jeu)
+
+                                    self.nombre_tour += 1
+                                    if self.nombre_tour % len(self.joueurs):  # compte le nmbr de tour de plateau
+                                        self.nmbr_tour_plateau += 1
+
+                                case_cliquee = 0  # reset user clicks
+                                clique_joueur = []
+                            else:
+                                case_cliquee = 0  # reset user clicks
+                                clique_joueur = []
+
+                            # vérifie les règles
+
+                            if self.nmbr_tour_plateau == 10 and self.Is_drapeu_neutre:
+                                # drapeau pas pris avant le 10ème tour de plateau
+                                for i in range(len(self.joueurs)):  # on met des malus
+                                    self.points_joueur[self.joueurs[-i]] -= (20 - 5 * i)
+                                self.Is_jeu_en_cours = False
+
+                            if not self.Is_drapeu_neutre and self.plateau.cases[
+                                board.COORD.index("h08")].equipe == "white":
+                                # drapeau a déjà été pris MAIS il n'est plus occupé
+                                self.count_tour_drapeau_neutre += 1
+                                if self.count_tour_drapeau_neutre >= 5:
+                                    joueur_pts_bonus = self.joueur_max_point()
+                                    self.fin_partie(joueur_pts_bonus)
+
+                            for equipe in self.joueurs:
+                                if self.points_joueur[equipe] >= 100:
+                                    # partie finie si on joueur gagne 100pts
+                                    joueur_pts_bonus = self.joueur_max_point()
+                                    self.fin_partie(joueur_pts_bonus)
+
+                            if not engine.Is_drapeau_prenable(self.plateau) and \
+                                    self.plateau.cases[board.COORD.index("h08")].equipe != "white":
+                                # si drapeau n'est pas prenable et que quelqu'un est dessus
+                                self.fin_partie(self.plateau.cases[board.COORD.index("h08")].equipe)
+
+                            if self.nombre_tour == 100:
+                                self.Is_jeu_en_cours = False
+
+            clock.tick(15)
+            p.display.flip()
+            drawGameState(ecran, self.plateau.cases)
+
+
+plateau1 = board.Plateau()
+a = GUI_jeu()
+a.jeu_visuel()

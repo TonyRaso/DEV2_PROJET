@@ -4,9 +4,11 @@ import engine
 import json
 
 
-class Game:
-    def __init__(self, plateau=board.Plateau(), joueurs=["yellow", "blue", "red", "green"], nombre_tour=0,
+class Jeu:
+    def __init__(self, plateau=board.Plateau(), joueurs=None, nombre_tour=0,
                  nmbr_tour_plateau=0):
+        if joueurs is None:
+            joueurs = ["yellow", "blue", "red", "green"]
         self.Is_jeu_en_cours = True
         self.plateau = plateau
         self.joueurs = joueurs
@@ -166,5 +168,5 @@ if __name__ == "__main__":
     joueurs = joueurs[0:int(nmbr_joueurs)]
 
     plateau1 = board.Plateau()
-    Game1 = Game(plateau1, joueurs)
+    Game1 = Jeu(plateau1, joueurs)
     Game1.jeu()

@@ -39,8 +39,8 @@ def verif_format_coup(coup):
         return False
 
 
-def is_case_interdit(plateau, move):
-    arrive = move[4:7]
+def is_case_interdit(plateau, coup):
+    arrive = coup[4:7]
     if plateau.cases[COORD.index(arrive)].nom == "INTERDIT":
         print("Case d'arrivée interdite !")
         return False

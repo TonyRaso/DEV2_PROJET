@@ -63,18 +63,18 @@ class Plateau:
             Piece('PION', "yellow"), Piece('CAVALIER', "yellow"),  # ligne 10
 
             Piece('FOU', "red"), Piece('PION', "red"),
-            Piece(), Piece(), Piece(), Piece(), Piece(), Piece('DAME', "red"), Piece(), Piece(), Piece(), Piece(),
+            Piece(), Piece(), Piece(), Piece(), Piece(), Piece(), Piece(), Piece(), Piece(), Piece(),
             Piece(),
             Piece('PION', "yellow"), Piece('FOU', "yellow"),  # ligne 09
 
             Piece('DAME', "red"), Piece('PION', "red"),
-            Piece(), Piece(), Piece(), Piece(), Piece('DAME', "blue"), Piece("FLAG", "white", True),
-            Piece('DAME', "yellow"), Piece(), Piece(),
+            Piece(), Piece(), Piece(), Piece(), Piece(), Piece("FLAG", "white", True),
+            Piece(), Piece(), Piece(),
             Piece(), Piece(),
-            Piece('PION', "yellow"), Piece('PION', "yellow"),  # ligne 08
+            Piece('PION', "yellow"), Piece('DAME', "yellow"),  # ligne 08
 
             Piece('FOU', "red"), Piece('PION', "red"),
-            Piece(), Piece(), Piece(), Piece(), Piece(), Piece("DAME", "green"), Piece("PION", "yellow"), Piece(),
+            Piece(), Piece(), Piece(), Piece(), Piece(), Piece(), Piece(), Piece(),
             Piece(), Piece(),
             Piece(),
             Piece('PION', "yellow"), Piece('FOU', "yellow"),  # ligne 07
