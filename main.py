@@ -117,7 +117,7 @@ class Jeu:
                     equipe_en_jeu = self.joueur_prochain(equipe_en_jeu)
 
                     self.nombre_tour += 1
-                    if self.nombre_tour % len(self.joueurs):  # compte le nmbr de tour de plateau
+                    if self.nombre_tour % len(self.joueurs) == 0:  # compte le nmbr de tour de plateau
                         self.nmbr_tour_plateau += 1
 
             if self.nmbr_tour_plateau == 10 and self.Is_drapeu_neutre:

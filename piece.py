@@ -8,6 +8,7 @@ class Piece:
         self.equipe = equipe
         self.Is_drapeau = Is_drapeau
 
+
     def __str__(self):
         res = "."
         if self.nom == "PION":

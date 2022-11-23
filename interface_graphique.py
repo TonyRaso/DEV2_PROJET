@@ -25,15 +25,39 @@ def charge_images():
         IMAGES[piece] = p.transform.scale(p.image.load("images/" + piece + ".png"), (TAILLE_CASE, TAILLE_CASE))
 
 
-def drawGameState(ecran, plateau):
+def selection_equipe(ecran, plateau, equipe_en_jeu):
+    for case in range(len(plateau)):
+        if plateau[case].equipe == equipe_en_jeu:
+            row = int(case / 15)
+            col = case % 15
+            s = p.Surface((TAILLE_CASE, TAILLE_CASE))
+            s.set_alpha(40)  # transparency value 0 -> transparent, 255 -> opaque
+            s.fill(p.Color('yellow'))
+            ecran.blit(s, (col * TAILLE_CASE, row * TAILLE_CASE))
+
+
+def selection_case(ecran, case_cliquee):
+    if case_cliquee != 0:
+        row = int(case_cliquee / 15)
+        col = case_cliquee % 15
+        # highlight selected square
+        s = p.Surface((TAILLE_CASE, TAILLE_CASE))
+        s.set_alpha(90)  # transparency value 0 -> transparent, 255 -> opaque
+        s.fill(p.Color('blue'))
+        ecran.blit(s, (col * TAILLE_CASE, row * TAILLE_CASE))
+
+
+def drawGameState(ecran, plateau, case_cliquee, equipe_en_jeu):
     """
     Responsible for all the graphics within current game state.
     """
-    drawBoard(ecran)  # draw squares on the board
+    afficher_plateau(ecran)  # draw squares on the board
     drawPieces(ecran, plateau)  # draw pieces on top of those squares
+    selection_case(ecran, case_cliquee)  # highlight case choisie
+    selection_equipe(ecran, plateau, equipe_en_jeu)  # highlight equipe en jeu
 
 
-def afficher_plateau():
+def afficher_plateau(ecran):
     """
     Draw the squares on the board.
     The top left square is always light.
@@ -47,19 +71,6 @@ def afficher_plateau():
                         p.Rect(column * TAILLE_CASE, row * TAILLE_CASE, TAILLE_CASE, TAILLE_CASE))
 
 
-def drawBoard(screen):
-    """
-    Draw the squares on the board.
-    The top left square is always light.
-    """
-    global colors
-    colors = [p.Color("white"), p.Color("gray")]
-    for row in range(DIMENSION):
-        for column in range(DIMENSION):
-            color = colors[((row + column) % 2)]
-            p.draw.rect(screen, color, p.Rect(column * TAILLE_CASE, row * TAILLE_CASE, TAILLE_CASE, TAILLE_CASE))
-
-
 def drawPieces(screen, plateau):
     """
     Draw the pieces on the board using the current game_state.board
@@ -71,9 +82,11 @@ def drawPieces(screen, plateau):
             if piece != "." and piece != " ":
                 screen.blit(IMAGES[piece + plateau[count].equipe],
                             p.Rect(col * TAILLE_CASE, row * TAILLE_CASE, TAILLE_CASE, TAILLE_CASE))
+
             elif piece == " ":
                 screen.blit(IMAGES[plateau[count].equipe],
                             p.Rect(col * TAILLE_CASE, row * TAILLE_CASE, TAILLE_CASE, TAILLE_CASE))
+
             count += 1
 
 
@@ -104,7 +117,6 @@ class GUI_jeu(Jeu):
                         col = location[0] // TAILLE_CASE
                         row = location[1] // TAILLE_CASE
                         index = (col + row * 15)
-
                         if case_cliquee == index or col >= DIMENSION:  # user clicked the same square twice
                             case_cliquee = 0  # deselect
                             clique_joueur = []  # clear clicks
@@ -142,7 +154,7 @@ class GUI_jeu(Jeu):
                                     equipe_en_jeu = self.joueur_prochain(equipe_en_jeu)
 
                                     self.nombre_tour += 1
-                                    if self.nombre_tour % len(self.joueurs):  # compte le nmbr de tour de plateau
+                                    if self.nombre_tour % len(self.joueurs) == 0:  # compte le nmbr de tour de plateau
                                         self.nmbr_tour_plateau += 1
 
                                 case_cliquee = 0  # reset user clicks
@@ -183,7 +195,7 @@ class GUI_jeu(Jeu):
 
             clock.tick(15)
             p.display.flip()
-            drawGameState(ecran, self.plateau.cases)
+            drawGameState(ecran, self.plateau.cases, case_cliquee, equipe_en_jeu)
 
 
 plateau1 = board.Plateau()
