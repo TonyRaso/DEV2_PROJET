@@ -20,6 +20,8 @@ class Jeu:
 
 
 if __name__ == "__main__":
+    print("Changement mineur juste pour tester le push Github \N{grinning face}")
     table1 = board.Plateau()
     Game1 = Jeu(table1)
     Game1.jouer()
+
