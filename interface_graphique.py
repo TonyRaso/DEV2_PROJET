@@ -2,7 +2,6 @@ import pygame as p
 import board
 import engine
 import sys
-from piece import Piece
 from main import Jeu
 
 LARGEUR = HAUTEUR = 600
@@ -90,6 +89,36 @@ def drawPieces(screen, plateau):
             count += 1
 
 
+def mousclicker(plateau):
+    move = ""
+    case_cliquee = 0
+    clique_joueur = []
+    for e in p.event.get():
+        if e.type == p.QUIT:
+            p.quit()
+            sys.exit()
+
+        # mouse handler
+        elif e.type == p.MOUSEBUTTONDOWN:
+            location = p.mouse.get_pos()  # (x, y) location of the mouse
+            col = location[0] // TAILLE_CASE
+            row = location[1] // TAILLE_CASE
+            index = (col + row * 15)
+            if case_cliquee == index or col >= DIMENSION:  # user clicked the same square twice
+                case_cliquee = 0  # deselect
+                clique_joueur = []  # clear clicks
+            else:
+                case_cliquee = index
+                clique_joueur.append(case_cliquee)  # append for both 1st and 2nd click
+            print(clique_joueur)
+            if len(clique_joueur) == 2:  # after 2nd click on joue
+                equipe_piece = plateau.cases[clique_joueur[0]].equipe
+                move = str(plateau.cases[clique_joueur[0]]).lower() + board.COORD[clique_joueur[0]] + \
+                       board.COORD[clique_joueur[1]]
+                print(move)
+    return move
+
+
 class GUI_jeu(Jeu):
     def __init__(self, plateau=board.Plateau(), joueurs=None, nombre_tour=0, nmbr_tour_plateau=0):
         super().__init__(plateau, joueurs, nombre_tour, nmbr_tour_plateau)
@@ -123,12 +152,11 @@ class GUI_jeu(Jeu):
                         else:
                             case_cliquee = index
                             clique_joueur.append(case_cliquee)  # append for both 1st and 2nd click
-                        print(clique_joueur)
                         if len(clique_joueur) == 2:  # after 2nd click on joue
-                            equipe_piece = self.plateau.cases[clique_joueur[0]].equipe
                             move = str(self.plateau.cases[clique_joueur[0]]).lower() + board.COORD[clique_joueur[0]] + \
                                    board.COORD[clique_joueur[1]]
                             print(move)
+                            arrivee = move[4:7]
                             if engine.verif_format_coup(move) \
                                     and engine.is_place_occupee(self.plateau, move,
                                                                 equipe_en_jeu) and engine.is_case_interdit(self.plateau,
@@ -141,7 +169,74 @@ class GUI_jeu(Jeu):
                                     continue
 
                                 if engine.verif_deplacment(move, self.plateau, equipe_en_jeu):  # on peut jouer le coup
-                                    self.plateau.deplacement(self.plateau, move, equipe_en_jeu)
+                                    equipe_drapeau = self.plateau.cases[board.COORD.index("h08")].equipe
+                                    if equipe_drapeau != "white" and arrivee == "h08":
+                                        # si le drapeau est pris, on devra lancer une contre-attaque
+                                        self.plateau.deplacement(self.plateau, move, equipe_en_jeu)
+                                        contre_attaque_finie = False
+                                        case_cliquee = 0  # deselect
+                                        clique_joueur = []  # clear clicks
+                                        while not contre_attaque_finie:
+                                            for i in p.event.get():
+                                                if i.type == p.QUIT:
+                                                    p.quit()
+                                                    sys.exit()
+                                                # mouse handler
+                                                elif i.type == p.MOUSEBUTTONDOWN:
+                                                    if self.Is_jeu_en_cours:
+                                                        location = p.mouse.get_pos()  # (x, y) location of the mouse
+                                                        col = location[0] // TAILLE_CASE
+                                                        row = location[1] // TAILLE_CASE
+                                                        index = (col + row * 15)
+                                                        if case_cliquee == index or col >= DIMENSION:
+                                                            # user clicked the same square twice
+                                                            case_cliquee = 0  # deselect
+                                                            clique_joueur = []  # clear clicks
+                                                        else:
+                                                            case_cliquee = index
+                                                            clique_joueur.append(
+                                                                case_cliquee)  # append for both 1st and 2nd click
+                                                        if len(clique_joueur) == 2:  # after 2nd click on joue
+                                                            move = str(self.plateau.cases[clique_joueur[0]]).lower() + \
+                                                                   board.COORD[clique_joueur[0]] + \
+                                                                   board.COORD[clique_joueur[1]]
+                                                            print(move)
+                                                            if equipe_drapeau != self.plateau.cases[
+                                                                board.COORD.index(move[1:4])].equipe:
+                                                                # vérifie si le pion déplacé est le bon
+                                                                case_cliquee = 0  # reset user clicks
+                                                                clique_joueur = []
+                                                                continue
+                                                            print(move, engine.Is_contre_attaque_sur_flag_possible(self.plateau, equipe_drapeau))
+                                                            if move in engine.Is_contre_attaque_sur_flag_possible(
+                                                                    self.plateau, equipe_drapeau):
+                                                                # vérifie si format correct et place libre
+                                                                # et case pas interdite
+                                                                # et coup dans les coups autorisé en contre-attaque
+                                                                # on peut jouer le coup
+                                                                self.plateau.deplacement(self.plateau, move, equipe_drapeau)
+                                                                contre_attaque_finie = True
+                                            clock.tick(15)
+                                            p.display.flip()
+                                            drawGameState(ecran, self.plateau.cases, case_cliquee, equipe_drapeau)
+                                                                    # fin contre attaque
+                                    elif arrivee != "h08" or equipe_drapeau == "white" and arrivee == "h08":
+                                        # on joue le coup normal
+                                        if engine.verif_format_coup(move) \
+                                                and engine.is_place_occupee(self.plateau, move,
+                                                                            equipe_en_jeu) and engine.is_case_interdit(
+                                            self.plateau, move):
+
+                                            # vérifie si format correct et place libre et case pas interdite
+                                            if equipe_en_jeu != self.plateau.cases[board.COORD.index(move[1:4])].equipe:
+                                                # vérifie si le pion déplacé est le bon
+                                                case_cliquee = 0  # reset user clicks
+                                                clique_joueur = []
+                                                continue
+
+                                            if engine.verif_deplacment(move, self.plateau,
+                                                                       equipe_en_jeu):  # on peut jouer le coup
+                                                self.plateau.deplacement(self.plateau, move, equipe_en_jeu)
 
                                     if self.plateau.cases[
                                         board.COORD.index("h08")].equipe != "white":  # drapeau pris par une équipe

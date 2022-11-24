@@ -63,13 +63,13 @@ class Plateau:
             Piece('PION', "yellow"), Piece('CAVALIER', "yellow"),  # ligne 10
 
             Piece('FOU', "red"), Piece('PION', "red"),
-            Piece(), Piece(), Piece(), Piece(), Piece(), Piece(), Piece(), Piece(), Piece(), Piece(),
+            Piece(), Piece(), Piece(), Piece(), Piece(), Piece('DAME', "red"), Piece(), Piece(), Piece(), Piece(),
             Piece(),
             Piece('PION', "yellow"), Piece('FOU', "yellow"),  # ligne 09
 
             Piece('DAME', "red"), Piece('PION', "red"),
-            Piece(), Piece(), Piece(), Piece(), Piece(), Piece("FLAG", "white", True),
-            Piece(), Piece(), Piece(),
+            Piece(), Piece(), Piece(), Piece(), Piece('DAME', "green"), Piece("FLAG", "white", True),
+            Piece('DAME', "green"), Piece(), Piece(),
             Piece(), Piece(),
             Piece('PION', "yellow"), Piece('DAME', "yellow"),  # ligne 08
 
@@ -106,6 +106,7 @@ class Plateau:
             Piece('FOU', "green"), Piece('CAVALIER', "green"), Piece('TOUR', "green"),
             Piece('INTERDIT'), Piece('INTERDIT'), Piece('INTERDIT'), Piece('INTERDIT'),  # ligne 01
         ]
+        self.is_contre_attaque = False
 
     def afficher_plateau(self, joueurs=""):
         if joueurs != "":  # c'est qu'on appelle la fonction avec un argument, donc au tout début
@@ -171,22 +172,12 @@ class Plateau:
         arrive = coup[4:7]
 
         if self.cases[COORD.index(depart)].nom == nom_piece:  # Vérifie que la pièce appellée est la bonne
-            if self.cases[COORD.index(arrive)].Is_drapeau and self.cases[COORD.index(arrive)].equipe == "white":
-                # si on arrive sur le flag neutre
+            if self.cases[COORD.index(arrive)].Is_drapeau:
+                # si on arrive sur le flag
                 self.cases[COORD.index(arrive)] = Piece(nom_piece, equipe, True)
                 self.cases[COORD.index(depart)] = Piece()
-
-            elif self.cases[COORD.index(arrive)].Is_drapeau and self.cases[
-                COORD.index(arrive)].equipe != "white" and not contre_attaque:
-                # si on arrive sur flag déjà pris et que ce n'est pas une contre attaque
-                equipe_contre_attaque = self.cases[COORD.index(arrive)].equipe
-                self.cases[COORD.index(arrive)] = Piece(nom_piece, equipe, True)
-                self.cases[COORD.index(depart)] = Piece()
-                if engine.Is_contre_attaque_sur_flag_possible(plateau, equipe_contre_attaque):
-                    # si un coup est possible on lance la contre-attaque
-                    self.contre_attaque(plateau, equipe_contre_attaque)  # contre attaque !
-
             else:
+                #coup normal
                 self.cases[COORD.index(arrive)] = Piece(nom_piece, equipe)
                 self.cases[COORD.index(depart)] = Piece()
 
