@@ -2,6 +2,7 @@ import pygame as p
 import board
 import engine
 import sys
+import argparse
 from main import Jeu
 
 LARGEUR = HAUTEUR = 600
@@ -11,6 +12,13 @@ IMAGES = {}
 p.init()
 
 ecran = p.display.set_mode((LARGEUR, HAUTEUR))
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--nombre-joueur", type=int, help="nombre de joueur, entre 2 et 4")
+parser.add_argument("--score", help="si vous voulez afficher les scores et le réinitialiser sinon "
+                                    "garder en mémoire pour la prochaine fois [oui/non]")
+
+args = parser.parse_args()
 
 
 def charge_images():
@@ -124,6 +132,7 @@ class GUI_jeu(Jeu):
         super().__init__(plateau, joueurs, nombre_tour, nmbr_tour_plateau)
 
     def jeu_visuel(self):
+        self.plateau.init_plateau(self.joueurs)
         clock = p.time.Clock()
         ecran.fill(p.Color("white"))
         case_cliquee = 0
@@ -207,19 +216,19 @@ class GUI_jeu(Jeu):
                                                                 case_cliquee = 0  # reset user clicks
                                                                 clique_joueur = []
                                                                 continue
-                                                            print(move, engine.Is_contre_attaque_sur_flag_possible(self.plateau, equipe_drapeau))
                                                             if move in engine.Is_contre_attaque_sur_flag_possible(
                                                                     self.plateau, equipe_drapeau):
                                                                 # vérifie si format correct et place libre
                                                                 # et case pas interdite
                                                                 # et coup dans les coups autorisé en contre-attaque
                                                                 # on peut jouer le coup
-                                                                self.plateau.deplacement(self.plateau, move, equipe_drapeau)
+                                                                self.plateau.deplacement(self.plateau, move,
+                                                                                         equipe_drapeau)
                                                                 contre_attaque_finie = True
                                             clock.tick(15)
                                             p.display.flip()
                                             drawGameState(ecran, self.plateau.cases, case_cliquee, equipe_drapeau)
-                                                                    # fin contre attaque
+                                            # fin contre attaque
                                     elif arrivee != "h08" or equipe_drapeau == "white" and arrivee == "h08":
                                         # on joue le coup normal
                                         if engine.verif_format_coup(move) \
@@ -293,6 +302,25 @@ class GUI_jeu(Jeu):
             drawGameState(ecran, self.plateau.cases, case_cliquee, equipe_en_jeu)
 
 
-plateau1 = board.Plateau()
-a = GUI_jeu()
-a.jeu_visuel()
+if __name__ == "__main__":
+
+    joueurs = ["yellow", "blue", "red", "green"]
+
+    nmbr_joueurs = args.nombre_joueur
+    if not nmbr_joueurs:
+        nmbr_joueurs = 4
+
+    joueurs = joueurs[0:int(nmbr_joueurs)]
+
+    afficher_score = args.score
+
+    plateau1 = board.Plateau()
+    a = GUI_jeu(plateau1, joueurs)
+    a.jeu_visuel()
+
+    if afficher_score == "oui":
+        a.afficher_score()
+    elif afficher_score == "non":
+        a.ajout_score()
+    else:
+        print("input incorrect")

@@ -85,7 +85,8 @@ class Jeu:
                 print("input incorrect")
 
     def jeu(self):
-        self.plateau.afficher_plateau(self.joueurs)
+        self.plateau.init_plateau(self.joueurs)
+        self.plateau.afficher_plateau()
         equipe_en_jeu = self.joueur_prochain("yellow")
         self.init_point_joueur()
         # force la première équipe à jouer à être après le yellow ( donc green -> red -> blue )
@@ -105,7 +106,31 @@ class Jeu:
                     continue
 
                 if engine.verif_deplacment(move, self.plateau, equipe_en_jeu):  # on peut jouer le coup
-                    self.plateau.deplacement(self.plateau, move, equipe_en_jeu)
+                    equipe_drapeau = self.plateau.cases[board.COORD.index("h08")].equipe
+                    if equipe_drapeau != "white" and move[4:7] == "h08":
+                        # si le drapeau est pris, on devra lancer une contre-attaque
+                        self.plateau.deplacement(self.plateau, move, equipe_en_jeu)
+                        contre_attaque_finie = False
+                        while not contre_attaque_finie:
+                            print("tour du joueur", equipe_drapeau)
+                            move = input(
+                                "Quel pièce voulez vous déplacer vers quel case ? "
+                                "(Format, pf02f03 = pion en f02 vers f03) : ")
+                            if engine.verif_format_coup(move) \
+                                    and engine.is_place_occupee(self.plateau, move,
+                                                                equipe_drapeau) and engine.is_case_interdit(
+                                self.plateau,
+                                move):
+                                self.plateau.deplacement(self.plateau, move, equipe_drapeau)
+                                contre_attaque_finie = True
+
+                    elif move[4:7] != "h08" or equipe_drapeau == "white" and move[4:7] == "h08":
+                        # on joue le coup normal
+                        if engine.verif_format_coup(move) and engine.is_place_occupee(self.plateau, move,
+                                                                                      equipe_en_jeu) and \
+                                engine.is_case_interdit(self.plateau, move):
+                            if engine.verif_deplacment(move, self.plateau, equipe_en_jeu):  # on peut jouer le coup
+                                self.plateau.deplacement(self.plateau, move, equipe_en_jeu)
 
                     if self.plateau.cases[board.COORD.index("h08")].equipe != "white":  # drapeau pris par une équipe
                         self.points_joueur[self.plateau.cases[board.COORD.index("h08")].equipe] += 5

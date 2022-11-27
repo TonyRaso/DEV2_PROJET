@@ -63,13 +63,13 @@ class Plateau:
             Piece('PION', "yellow"), Piece('CAVALIER', "yellow"),  # ligne 10
 
             Piece('FOU', "red"), Piece('PION', "red"),
-            Piece(), Piece(), Piece(), Piece(), Piece(), Piece('DAME', "red"), Piece(), Piece(), Piece(), Piece(),
+            Piece(), Piece(), Piece(), Piece(), Piece(), Piece(), Piece(), Piece(), Piece(), Piece(),
             Piece(),
             Piece('PION', "yellow"), Piece('FOU', "yellow"),  # ligne 09
 
             Piece('DAME', "red"), Piece('PION', "red"),
-            Piece(), Piece(), Piece(), Piece(), Piece('DAME', "green"), Piece("FLAG", "white", True),
-            Piece('DAME', "green"), Piece(), Piece(),
+            Piece(), Piece(), Piece(), Piece(), Piece(), Piece("FLAG", "white", True),
+            Piece(), Piece(), Piece(),
             Piece(), Piece(),
             Piece('PION', "yellow"), Piece('DAME', "yellow"),  # ligne 08
 
@@ -108,8 +108,8 @@ class Plateau:
         ]
         self.is_contre_attaque = False
 
-    def afficher_plateau(self, joueurs=""):
-        if joueurs != "":  # c'est qu'on appelle la fonction avec un argument, donc au tout début
+    def init_plateau(self, joueurs=""):
+        if joueurs != "":  # c'est qu'on appelle la fonction avec un argument
             piece_a_retirer = []
             for joueur in JOUEURS_POSSIBLE:
                 if joueur not in joueurs:
@@ -127,6 +127,8 @@ class Plateau:
                     # on a retirer les 2 collonnes/rangées devant les équipes qui ne jouent pas
 
                     self.cases[self.cases.index(case)] = Piece("INTERDIT")  # on retire les pièces qui ne jouent pas
+
+    def afficher_plateau(self):
         print("_" * 46 + "\t")
         i = 0
         affiche = ""
@@ -177,7 +179,7 @@ class Plateau:
                 self.cases[COORD.index(arrive)] = Piece(nom_piece, equipe, True)
                 self.cases[COORD.index(depart)] = Piece()
             else:
-                #coup normal
+                # coup normal
                 self.cases[COORD.index(arrive)] = Piece(nom_piece, equipe)
                 self.cases[COORD.index(depart)] = Piece()
 
