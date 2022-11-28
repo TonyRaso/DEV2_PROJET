@@ -102,18 +102,18 @@ class Jeu:
                         # si le drapeau est pris, on devra lancer une contre-attaque
                         self.plateau.deplacement(self.plateau, move, equipe_en_jeu)
                         contre_attaque_finie = False
-                        while not contre_attaque_finie:
-                            print("tour du joueur", equipe_drapeau)
-                            move = input(
-                                "Quel pièce voulez vous déplacer vers quel case ? "
-                                "(Format, pf02f03 = pion en f02 vers f03) : ")
-                            if engine.verif_format_coup(move) \
-                                    and engine.is_place_occupee(self.plateau, move,
-                                                                equipe_drapeau) and engine.is_case_interdit(
-                                self.plateau,
-                                move):
-                                self.plateau.deplacement(self.plateau, move, equipe_drapeau)
-                                contre_attaque_finie = True
+                        if engine.Is_contre_attaque_sur_flag_possible(self.plateau, equipe_drapeau):
+                            while not contre_attaque_finie:
+                                print("tour du joueur", equipe_drapeau)
+                                move = input(
+                                    "Quel pièce voulez vous déplacer vers quel case ? "
+                                    "(Format, pf02f03 = pion en f02 vers f03) : ")
+                                if engine.verif_format_coup(move) \
+                                        and engine.is_place_occupee(self.plateau, move,
+                                                                    equipe_drapeau) and engine.is_case_interdit(
+                                    self.plateau, move):
+                                    self.plateau.deplacement(self.plateau, move, equipe_drapeau)
+                                    contre_attaque_finie = True
 
                     elif move[4:7] != "h08" or equipe_drapeau == "white" and move[4:7] == "h08":
                         # on joue le coup normal
