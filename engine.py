@@ -169,6 +169,8 @@ def Is_contre_attaque_sur_flag_possible(plateau, equipe):
             move = case.nom[0].lower() + COORD[plateau.cases.index(case)] + case_flag
             if verif_deplacment(move, plateau, equipe, False):
                 coup_possible.append(move)
+    if len(coup_possible) == 0:
+        return False
 
     if len(coup_possible) == 0:
         print("pas de contre-attaque possible")

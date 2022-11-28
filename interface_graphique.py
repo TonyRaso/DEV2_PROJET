@@ -185,14 +185,15 @@ class GUI_jeu(Jeu):
                                         contre_attaque_finie = False
                                         case_cliquee = 0  # deselect
                                         clique_joueur = []  # clear clicks
-                                        while not contre_attaque_finie:
-                                            for i in p.event.get():
-                                                if i.type == p.QUIT:
-                                                    p.quit()
-                                                    sys.exit()
-                                                # mouse handler
-                                                elif i.type == p.MOUSEBUTTONDOWN:
-                                                    if self.Is_jeu_en_cours:
+                                        print(engine.Is_contre_attaque_sur_flag_possible(self.plateau, equipe_drapeau))
+                                        if engine.Is_contre_attaque_sur_flag_possible(self.plateau, equipe_drapeau):
+                                            while not contre_attaque_finie:  # contre-attaque
+                                                for i in p.event.get():
+                                                    if i.type == p.QUIT:
+                                                        p.quit()
+                                                        sys.exit()
+                                                    # mouse handler
+                                                    elif i.type == p.MOUSEBUTTONDOWN:
                                                         location = p.mouse.get_pos()  # (x, y) location of the mouse
                                                         col = location[0] // TAILLE_CASE
                                                         row = location[1] // TAILLE_CASE
@@ -207,8 +208,8 @@ class GUI_jeu(Jeu):
                                                                 case_cliquee)  # append for both 1st and 2nd click
                                                         if len(clique_joueur) == 2:  # after 2nd click on joue
                                                             move = str(self.plateau.cases[clique_joueur[0]]).lower() + \
-                                                                   board.COORD[clique_joueur[0]] + \
-                                                                   board.COORD[clique_joueur[1]]
+                                                                board.COORD[clique_joueur[0]] + \
+                                                                board.COORD[clique_joueur[1]]
                                                             print(move)
                                                             if equipe_drapeau != self.plateau.cases[
                                                                 board.COORD.index(move[1:4])].equipe:
@@ -216,19 +217,22 @@ class GUI_jeu(Jeu):
                                                                 case_cliquee = 0  # reset user clicks
                                                                 clique_joueur = []
                                                                 continue
+
                                                             if move in engine.Is_contre_attaque_sur_flag_possible(
                                                                     self.plateau, equipe_drapeau):
                                                                 # vérifie si format correct et place libre
                                                                 # et case pas interdite
                                                                 # et coup dans les coups autorisé en contre-attaque
                                                                 # on peut jouer le coup
-                                                                self.plateau.deplacement(self.plateau, move,
-                                                                                         equipe_drapeau)
+                                                                self.plateau.deplacement(self.plateau, move, equipe_drapeau)
                                                                 contre_attaque_finie = True
-                                            clock.tick(15)
-                                            p.display.flip()
-                                            drawGameState(ecran, self.plateau.cases, case_cliquee, equipe_drapeau)
-                                            # fin contre attaque
+                                                                case_cliquee = 0  # reset user clicks
+                                                                clique_joueur = []
+
+                                                clock.tick(15)
+                                                p.display.flip()
+                                                drawGameState(ecran, self.plateau.cases, case_cliquee, equipe_drapeau)
+                                                # fin contre attaque
                                     elif arrivee != "h08" or equipe_drapeau == "white" and arrivee == "h08":
                                         # on joue le coup normal
                                         if engine.verif_format_coup(move) \
@@ -315,12 +319,12 @@ if __name__ == "__main__":
     afficher_score = args.score
 
     plateau1 = board.Plateau()
-    a = GUI_jeu(plateau1, joueurs)
-    a.jeu_visuel()
+    Game2 = GUI_jeu(plateau1, joueurs)
+    Game2.jeu_visuel()
 
     if afficher_score == "oui":
-        a.afficher_score()
+        Game2.afficher_score()
     elif afficher_score == "non":
-        a.ajout_score()
+        Game2.ajout_score()
     else:
         print("input incorrect")

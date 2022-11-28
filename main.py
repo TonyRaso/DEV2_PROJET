@@ -1,8 +1,15 @@
+import argparse
 import board
 import piece
 import engine
 import json
 
+parser = argparse.ArgumentParser()
+parser.add_argument("--nombre-joueur", type=int, help="nombre de joueur, entre 2 et 4")
+parser.add_argument("--score", help="si vous voulez afficher les scores et le réinitialiser sinon "
+                                    "garder en mémoire pour la prochaine fois [oui/non]")
+
+args = parser.parse_args()
 
 class Jeu:
     def __init__(self, plateau=board.Plateau(), joueurs=None, nombre_tour=0,
@@ -67,22 +74,6 @@ class Jeu:
         print(self.points_joueur)
         print("Féliciation au joueur " + joueur_gagnant + " !!!")
         self.Is_jeu_en_cours = False
-
-    def gestionscore(self):
-        print("\n La partie est Finie !")
-        Is_input_ok = False
-        while not Is_input_ok:
-            afficher_score = input(
-                "Voulez-vous réinitialiser les scores et afficher les scores depuis la dernière fois ? ('oui'/'non')")
-            if afficher_score == "oui":
-                self.afficher_score()
-                Is_input_ok = True
-
-            elif afficher_score == "non":
-                self.ajout_score()
-                Is_input_ok = True
-            else:
-                print("input incorrect")
 
     def jeu(self):
         self.plateau.init_plateau(self.joueurs)
@@ -172,26 +163,25 @@ class Jeu:
             if self.nombre_tour == 100:
                 self.Is_jeu_en_cours = False
 
-        if not self.Is_jeu_en_cours:
-            # jeu fini
-            self.gestionscore()
 
 
 if __name__ == "__main__":
-    nmbr_joueurs = 0
-    nmbr_joueurs_possible = ["2", "3", "4"]
-    nmbr_player_ok = True
-
-    while nmbr_player_ok:
-        nmbr_joueurs = input("Combien de joueurs êtes vous ? (entre 2 et 4)")
-        if nmbr_joueurs not in nmbr_joueurs_possible:
-            print("input impossible, recommencez")
-        elif nmbr_joueurs in nmbr_joueurs_possible:
-            nmbr_player_ok = False
-
     joueurs = ["yellow", "blue", "red", "green"]
+
+    nmbr_joueurs = args.nombre_joueur
+    if not nmbr_joueurs:
+        nmbr_joueurs = 4
     joueurs = joueurs[0:int(nmbr_joueurs)]
+
+    afficher_score = args.score
 
     plateau1 = board.Plateau()
     Game1 = Jeu(plateau1, joueurs)
     Game1.jeu()
+
+    if afficher_score == "oui":
+        Game1.afficher_score()
+    elif afficher_score == "non":
+        Game1.ajout_score()
+    else:
+        print("input incorrect")
