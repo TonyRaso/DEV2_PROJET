@@ -88,13 +88,14 @@ def drawPieces(screen, plateau):
             piece = str(plateau[count])
             if piece != "." and piece != " ":
                 screen.blit(IMAGES[piece + plateau[count].equipe],
-                            p.Rect(col * TAILLE_CASE, row * TAILLE_CASE, TAILLE_CASE, TAILLE_CASE))
+                        p.Rect(col * TAILLE_CASE, row * TAILLE_CASE, TAILLE_CASE, TAILLE_CASE))
 
             elif piece == " ":
                 screen.blit(IMAGES[plateau[count].equipe],
                             p.Rect(col * TAILLE_CASE, row * TAILLE_CASE, TAILLE_CASE, TAILLE_CASE))
-
             count += 1
+
+    screen.blit(IMAGES["Xwhite"], p.Rect(7 * TAILLE_CASE, 7 * TAILLE_CASE, TAILLE_CASE, TAILLE_CASE))
 
 
 def mousclicker(plateau):
@@ -208,8 +209,8 @@ class GUI_jeu(Jeu):
                                                                 case_cliquee)  # append for both 1st and 2nd click
                                                         if len(clique_joueur) == 2:  # after 2nd click on joue
                                                             move = str(self.plateau.cases[clique_joueur[0]]).lower() + \
-                                                                board.COORD[clique_joueur[0]] + \
-                                                                board.COORD[clique_joueur[1]]
+                                                                   board.COORD[clique_joueur[0]] + \
+                                                                   board.COORD[clique_joueur[1]]
                                                             print(move)
                                                             if equipe_drapeau != self.plateau.cases[
                                                                 board.COORD.index(move[1:4])].equipe:
@@ -224,7 +225,8 @@ class GUI_jeu(Jeu):
                                                                 # et case pas interdite
                                                                 # et coup dans les coups autorisé en contre-attaque
                                                                 # on peut jouer le coup
-                                                                self.plateau.deplacement(self.plateau, move, equipe_drapeau)
+                                                                self.plateau.deplacement(self.plateau, move,
+                                                                                         equipe_drapeau)
                                                                 contre_attaque_finie = True
                                                                 case_cliquee = 0  # reset user clicks
                                                                 clique_joueur = []

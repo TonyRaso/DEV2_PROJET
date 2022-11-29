@@ -79,9 +79,12 @@ def verif_deplacment(move, plateau, equipe, print_enable=True):
     piece = move[0]
     depart = move[1:4]
     arrive = move[4:7]
+    multi_premier_coup = 1
+    if plateau.cases[COORD.index(depart)].Is_premier_coup:
+        multi_premier_coup = 2
     if piece == "p":
         if equipe == "green":
-            if COORD.index(depart) - COORD.index(arrive) == 15 and plateau.cases[COORD.index(arrive)].equipe == "white":
+            if COORD.index(depart) - COORD.index(arrive) in [15 * multi_premier_coup, 15] and plateau.cases[COORD.index(arrive)].equipe == "white":
                 return True
             elif plateau.cases[COORD.index(arrive)].equipe != "white" and COORD.index(depart) - COORD.index(arrive) in [
                 14, 16]:
@@ -91,7 +94,7 @@ def verif_deplacment(move, plateau, equipe, print_enable=True):
                     print("coup impossible")
                 return False
         elif equipe == "blue":
-            if COORD.index(arrive) - COORD.index(depart) == 15 and plateau.cases[COORD.index(arrive)].equipe == "white":
+            if COORD.index(arrive) - COORD.index(depart) in [15 * multi_premier_coup, 15] and plateau.cases[COORD.index(arrive)].equipe == "white":
                 return True
             elif plateau.cases[COORD.index(arrive)].equipe != "white" and COORD.index(arrive) - COORD.index(depart) in [
                 14, 16]:
@@ -101,7 +104,7 @@ def verif_deplacment(move, plateau, equipe, print_enable=True):
                     print("coup impossible")
                 return False
         elif equipe == "red":
-            if COORD.index(arrive) - COORD.index(depart) == 1 and plateau.cases[COORD.index(arrive)].equipe == "white":
+            if COORD.index(arrive) - COORD.index(depart) in [1 * multi_premier_coup, 1] and plateau.cases[COORD.index(arrive)].equipe == "white":
                 return True
             elif plateau.cases[COORD.index(arrive)].equipe != "white" and COORD.index(arrive) - COORD.index(depart) in [
                 -14, 16]:
@@ -111,7 +114,7 @@ def verif_deplacment(move, plateau, equipe, print_enable=True):
                     print("coup impossible")
                 return False
         elif equipe == "yellow":
-            if COORD.index(depart) - COORD.index(arrive) == 1 and plateau.cases[COORD.index(arrive)].equipe == "white":
+            if COORD.index(depart) - COORD.index(arrive) in [1 * multi_premier_coup, 1] and plateau.cases[COORD.index(arrive)].equipe == "white":
                 return True
             elif plateau.cases[COORD.index(arrive)].equipe != "white" and COORD.index(depart) - COORD.index(arrive) in [
                 16, -14]:

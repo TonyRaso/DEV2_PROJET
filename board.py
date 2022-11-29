@@ -142,32 +142,6 @@ class Plateau:
             i += 1
         print(" A  B  C  D  E  F  G  H  I  J  K  L  M  N  O")
 
-    def contre_attaque(self, plateau, equipe_en_jeu):
-        self.afficher_plateau()
-        contre_attaque_finie = False
-        while not contre_attaque_finie:
-            print("tour du joueur", equipe_en_jeu)
-            coup = input(
-                "Quel pièce voulez vous déplacer vers quel case ? (Format, pf02f03 = pion en f02 vers f03),"
-                " vous êtes en contre-attaque, tapez 'pass' pour ne pas jouer: ")
-            if coup == "pass":
-                return
-            if engine.verif_format_coup(coup) \
-                    and engine.is_place_occupee(plateau, coup, equipe_en_jeu) and engine.is_case_interdit(plateau,
-                                                                                                          coup) \
-                    and coup in engine.Is_contre_attaque_sur_flag_possible(
-                plateau, equipe_en_jeu):
-                # vérifie si format correct et place libre et case pas interdite
-                # et coup dans les coups autorisé en contre-attaque
-
-                if equipe_en_jeu != plateau.cases[COORD.index(coup[1:4])].equipe:
-                    # vérifie si le pion déplacé est le bon
-                    print("Vous ne possédez pas de pion sur cette case!")
-
-                if engine.verif_deplacment(coup, plateau, equipe_en_jeu):  # on peut jouer le coup
-                    plateau.deplacement(plateau, coup, equipe_en_jeu, True)
-                    contre_attaque_finie = True
-
     def deplacement(self, plateau, coup, equipe, contre_attaque=False):
         nom_piece = INPUT_VERS_PIECE[coup[0]]
         depart = coup[1:4]
@@ -178,10 +152,17 @@ class Plateau:
                 # si on arrive sur le flag
                 self.cases[COORD.index(arrive)] = Piece(nom_piece, equipe, True)
                 self.cases[COORD.index(depart)] = Piece()
+
             else:
                 # coup normal
-                self.cases[COORD.index(arrive)] = Piece(nom_piece, equipe)
-                self.cases[COORD.index(depart)] = Piece()
+                if self.cases[COORD.index(depart)].Is_premier_coup :
+                    # si on joue la première fois un pion, on indique déjà joué pour la suite
+                    self.cases[COORD.index(arrive)] = Piece(nom_piece, equipe, Is_premier_coup=False)
+                    self.cases[COORD.index(depart)] = Piece()
+
+                else:
+                    self.cases[COORD.index(arrive)] = Piece(nom_piece, equipe)
+                    self.cases[COORD.index(depart)] = Piece()
 
         else:
             print("Coup invalide")
