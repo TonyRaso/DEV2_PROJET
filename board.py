@@ -32,6 +32,12 @@ COORD = [
 
 class Board:
     def __init__(self):
+        """
+        Méthode qui permet l'initialisation d'un objet de classe Board (table vierge),qui comprend la position initiale
+        des pieces de chaques joueurs ainsi que les cases interdites cad qui ne correspondent pas au dimensions du plateau
+        :param /
+        :return /
+        """
         self.cases = [
             Piece('INTERDIT'), Piece('INTERDIT'), Piece('INTERDIT'), Piece('INTERDIT'),
             Piece('TOUR', "blue"), Piece('CAVALIER', "blue"), Piece('FOU', "blue"), Piece('DAME', "blue"),
@@ -99,6 +105,11 @@ class Board:
         ]
 
     def format_board(self):
+        """
+        Methode qui permet la representation en console de l'echiquier
+        :return:/
+        :rtype:/
+        """
         i = 0
         toscreen = ""
         for j in self.cases:
@@ -109,6 +120,18 @@ class Board:
             i += 1
 
     def moveto(self, table, move, equipe):
+        """
+        Methode qui effectue le déplacement de la piece lors du tours (apres les differentes verification de engine)
+        et qui vérifie les cas de mouvements impossible indépendants des regles du jeux.
+        :param table:la table dans l état actuelle
+        :type table:un objet de type Board
+        :param move:le déplacement encodé par l'utilisateur
+        :type move: string
+        :param equipe: la couleur du joueur qui effectue le coup
+        :type equipe: string
+        :return: /
+        :rtype: /
+        """
         nomPiece = INPUT_TO_PIECE[move[0]]
         depart = move[1:4]
         arrive = move[4:7]
