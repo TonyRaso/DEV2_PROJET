@@ -5,11 +5,24 @@ LIST_PIECE = ["p"]
 
 class Piece:
 
+
     def __init__(self, nom="", couleur="white"):
+        """
+        methode qui sert a initialiser une piece avec son nom complet et sa couleur de joueur
+        :param nom:le nome de la piece (PION,FOU,TOUR,DAME,CAVALIER)
+        :type nom:string
+        :param couleur: la couleur du joueur a qui on initialise la piece
+        :type couleur:string
+        """
         self.nom = nom
         self.couleur = couleur
 
     def __str__(self):
+        """
+        Methode qui sert a récuperer le type et la couleur de la piece
+        :return: le nom abrégé et sa couleur
+        :rtype: string
+        """
         res = f"."
         if self.nom == "PION":
             res = "P"
@@ -27,5 +40,3 @@ class Piece:
             res = " "
         return colored(res, self.couleur)
 
-    def nom(self):
-        return self.nom

@@ -5,10 +5,20 @@ import engine
 
 class Game:
     def __init__(self, table):
+        """
+        Methode qui initialise la partie et qui démarre une table vierge
+        :param table: recoit la table de jeux a l'état de démarrage en parametre
+        :type table: un objet de classe Board
+        """
         self.IsGameON = True
         self.table = table
 
     def play(self):
+        """
+        Joue la partie du programme en console
+        :return: pas de return
+        :rtype: /
+        """
         nombre_tour = 0
         self.table.format_board()
         while self.IsGameON:
