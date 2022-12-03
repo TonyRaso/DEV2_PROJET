@@ -1,0 +1,13 @@
+Rendu du plateau à chaque coup, 
+déplacement sépcial propre à chaque pièce
+Vérification qu'une pièce alliée n'est pas sur la case d'arrivée
+Vérification qu'aunce pièce ne bloque le chemin
+Création d'un tour et choix du nmbr de joueur (entre 2 et 4)
+Supprime les pièces qui ne jouent pas
+Ajout d'une fct qui vérifie si l'arrivée n'est pas une case interdite
+Compte les points après un tour
+Permet les contre-attaque
+règle des 10premiers tours à blanc
+règle des 5tours à blancs après que le drapeau ai été pris
+Si plus personne ne peut reprendre le centre qui est occupé, la partie s’arrête et le
+joueur au drapeau gagne 20 points bonus.
