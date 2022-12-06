@@ -1,9 +1,19 @@
+import engine
 from piece import Piece
 
 JOUEURS_POSSIBLE = ["yellow", "blue", "red", "green"]
 
 INPUT_VERS_PIECE = {"p": "PION", "f": "FOU", "d": "DAME", "t": "TOUR", "c": "CAVALIER"}
 
+COORD_INTERDIT = ['a15', 'b15', 'c15', 'd15', 'l15', 'm15', 'n15', 'o15',
+                  'a14', 'b14', 'c14', 'd14', 'l14', 'm14', 'n14', 'o14',
+                  'a13', 'b13', 'c13', 'd13', 'l13', 'm13', 'n13', 'o13',
+                  'a12', 'b12', 'c12', 'd12', 'l12', 'm12', 'n12', 'o12',
+                  'a04', 'b04', 'c04', 'd04', 'l04', 'm04', 'n04', 'o04',
+                  'a03', 'b03', 'c03', 'd03', 'l03', 'm03', 'n03', 'o03',
+                  'a02', 'b02', 'c02', 'd02', 'l02', 'm02', 'n02', 'o02',
+                  'a01', 'b01', 'c01', 'd01', 'l01', 'm01', 'n01', 'o01',
+                  ]
 COORD = [
     'a15', 'b15', 'c15', 'd15', 'e15', 'f15', 'g15', 'h15', 'i15', 'j15', 'k15', 'l15', 'm15', 'n15', 'o15',
     'a14', 'b14', 'c14', 'd14', 'e14', 'f14', 'g14', 'h14', 'i14', 'j14', 'k14', 'l14', 'm14', 'n14', 'o14',
@@ -25,6 +35,12 @@ COORD = [
 
 class Plateau:
     def __init__(self):
+        """
+        Méthode qui permet l'initialisation d'un objet de classe Board (table vierge),qui comprend la position initiale
+        des pieces de chaques joueurs ainsi que les cases interdites cad qui ne correspondent pas au dimensions du plateau
+        :param /
+        :return /
+        """
         self.cases = [
             Piece('INTERDIT'), Piece('INTERDIT'), Piece('INTERDIT'), Piece('INTERDIT'),
             Piece('TOUR', "blue"), Piece('CAVALIER', "blue"), Piece('FOU', "blue"), Piece('DAME', "blue"),
@@ -58,13 +74,14 @@ class Plateau:
             Piece('PION', "yellow"), Piece('FOU', "yellow"),  # ligne 09
 
             Piece('DAME', "red"), Piece('PION', "red"),
-            Piece(), Piece(), Piece(), Piece(), Piece(), Piece("FLAG", "white"),
+            Piece(), Piece(), Piece(), Piece(), Piece(), Piece("FLAG", "white", True),
             Piece(), Piece(), Piece(),
             Piece(), Piece(),
-            Piece('PION', "yellow"), Piece('PION', "yellow"),  # ligne 08
+            Piece('PION', "yellow"), Piece('DAME', "yellow"),  # ligne 08
 
             Piece('FOU', "red"), Piece('PION', "red"),
-            Piece(), Piece(), Piece(), Piece(), Piece(), Piece(), Piece(), Piece(), Piece(), Piece(),
+            Piece(), Piece(), Piece(), Piece(), Piece(), Piece(), Piece(), Piece(),
+            Piece(), Piece(),
             Piece(),
             Piece('PION', "yellow"), Piece('FOU', "yellow"),  # ligne 07
 
@@ -95,28 +112,82 @@ class Plateau:
             Piece('FOU', "green"), Piece('CAVALIER', "green"), Piece('TOUR', "green"),
             Piece('INTERDIT'), Piece('INTERDIT'), Piece('INTERDIT'), Piece('INTERDIT'),  # ligne 01
         ]
+        self.is_contre_attaque = False
+
+    def init_plateau(self, joueurs=""):
+        if joueurs != "":  # c'est qu'on appelle la fonction avec un argument
+            piece_a_retirer = []
+            for joueur in JOUEURS_POSSIBLE:
+                if joueur not in joueurs:
+                    piece_a_retirer.append(joueur)
+            for case in self.cases:
+                if case.equipe in piece_a_retirer:
+                    if case.equipe == "green":
+                        self.cases[self.cases.index(case) - 30] = Piece("INTERDIT")
+                    elif case.equipe == "blue":
+                        self.cases[self.cases.index(case) + 30] = Piece("INTERDIT")
+                    elif case.equipe == "red":
+                        self.cases[self.cases.index(case) + 2] = Piece("INTERDIT")
+                    elif case.equipe == "yellow":
+                        self.cases[self.cases.index(case) - 2] = Piece("INTERDIT")
+                    # on a retirer les 2 collonnes/rangées devant les équipes qui ne jouent pas
+
+                    self.cases[self.cases.index(case)] = Piece("INTERDIT")  # on retire les pièces qui ne jouent pas
 
     def afficher_plateau(self):
+        """
+        Methode qui permet la representation en console de l'echiquier
+        :return:/
+        :rtype:/
+        """
+        print("_" * 46 + "\t")
         i = 0
-        ligne = ""
+        affiche = ""
+        compteur_linge = 15
         for j in self.cases:
-            ligne += " " + str(j) + " "
+            affiche += " " + str(j) + " "
             if i % 15 == 14:
-                print(ligne,  end=' \n')
-                ligne = ""
+                print(affiche, compteur_linge, end=' \n')
+                compteur_linge -= 1
+                affiche = ""
             i += 1
+        print(" A  B  C  D  E  F  G  H  I  J  K  L  M  N  O")
 
-    def deplacement(self, table, coup, equipe):
+    def deplacement(self, plateau, coup, equipe, contre_attaque=False):
+        """
+        Methode qui effectue le déplacement de la piece lors du tours (apres les differentes verification de engine)
+        et qui vérifie les cas de mouvements impossible indépendants des regles du jeux.
+        :param table:la table dans l état actuelle
+        :type table:un objet de type Board
+        :param move:le déplacement encodé par l'utilisateur
+        :type move: string
+        :param equipe: la couleur du joueur qui effectue le coup
+        :type equipe: string
+        :return: /
+        :rtype: /
+        """
         nom_piece = INPUT_VERS_PIECE[coup[0]]
         depart = coup[1:4]
         arrive = coup[4:7]
 
         if self.cases[COORD.index(depart)].nom == nom_piece:  # Vérifie que la pièce appellée est la bonne
+            if self.cases[COORD.index(arrive)].Is_drapeau:
+                # si on arrive sur le flag
+                self.cases[COORD.index(arrive)] = Piece(nom_piece, equipe, True)
+                self.cases[COORD.index(depart)] = Piece()
 
-            self.cases[COORD.index(arrive)] = Piece(nom_piece, equipe)
-            self.cases[COORD.index(depart)] = Piece()
-            table.afficher_plateau()
+            else:
+                # coup normal
+                if self.cases[COORD.index(depart)].Is_premier_coup :
+                    # si on joue la première fois un pion, on indique déjà joué pour la suite
+                    self.cases[COORD.index(arrive)] = Piece(nom_piece, equipe, Is_premier_coup=False)
+                    self.cases[COORD.index(depart)] = Piece()
+
+                else:
+                    self.cases[COORD.index(arrive)] = Piece(nom_piece, equipe)
+                    self.cases[COORD.index(depart)] = Piece()
 
         else:
             print("Coup invalide")
 
+        plateau.afficher_plateau()
