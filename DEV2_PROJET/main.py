@@ -1,6 +1,5 @@
 import argparse
 import board
-import piece
 import engine
 import json
 
@@ -66,6 +65,7 @@ class Jeu:
             for equipe in dic:
                 equipes[equipe] += dic[equipe]
         min_pts = 999
+        joueur_perdant = str()
         for joueur in equipes:
             if equipes[joueur] <= min_pts:
                 min_pts = equipes[joueur]
@@ -156,7 +156,7 @@ class Jeu:
                         # si le drapeau est pris, on devra lancer une contre-attaque
                         self.plateau.deplacement(self.plateau, move, equipe_en_jeu)
                         contre_attaque_finie = False
-                        if engine.Is_contre_attaque_sur_flag_possible(self.plateau, equipe_drapeau):
+                        if engine.is_contre_attaque_sur_flag_possible(self.plateau, equipe_drapeau):
                             while not contre_attaque_finie:
                                 print("tour du joueur", equipe_drapeau)
                                 move = input(
@@ -209,7 +209,7 @@ class Jeu:
                     joueur_pts_bonus = self.joueur_max_point()
                     self.fin_partie(joueur_pts_bonus)
 
-            if not engine.Is_drapeau_prenable(self.plateau) and \
+            if not engine.is_drapeau_prenable(self.plateau) and \
                     self.plateau.cases[board.COORD.index("h08")].equipe != "white":
                 # si drapeau n'est pas prenable et que quelqu'un est dessus
                 self.fin_partie(self.plateau.cases[board.COORD.index("h08")].equipe)
@@ -219,17 +219,17 @@ class Jeu:
 
 
 if __name__ == "__main__":
-    joueurs = ["yellow", "blue", "red", "green"]
+    joueur1 = ["yellow", "blue", "red", "green"]
 
     nmbr_joueurs = args.nombre_joueur
     if not nmbr_joueurs:
         nmbr_joueurs = 4
-    joueurs = joueurs[0:int(nmbr_joueurs)]
+    joueur1 = joueur1[0:int(nmbr_joueurs)]
 
     afficher_score = args.score
 
     plateau1 = board.Plateau()
-    Game1 = Jeu(plateau1, joueurs)
+    Game1 = Jeu(plateau1, joueur1)
     Game1.jeu()
 
     if afficher_score == "oui":

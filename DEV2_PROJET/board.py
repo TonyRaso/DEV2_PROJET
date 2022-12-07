@@ -36,8 +36,9 @@ COORD = [
 class Plateau:
     def __init__(self):
         """
-        Méthode qui permet l'initialisation d'un objet de classe Plateau (table vierge),qui comprend la position initiale
-        des pieces de chaques joueurs ainsi que les cases interdites cad qui ne correspondent pas au dimensions du plateau
+        Méthode qui permet l'initialisation d'un objet de classe Plateau (table vierge),qui comprend la position initial
+        des pieces de chaques joueurs ainsi que les cases interdites cad qui ne correspondent pas au dimensions
+        du plateau
         :param /
         :return /
         """
@@ -186,9 +187,9 @@ class Plateau:
 
             else:
                 # coup normal
-                if self.cases[COORD.index(depart)].Is_premier_coup :
+                if self.cases[COORD.index(depart)].Is_premier_coup:
                     # si on joue la première fois un pion, on indique déjà joué pour la suite
-                    self.cases[COORD.index(arrive)] = Piece(nom_piece, equipe, Is_premier_coup=False)
+                    self.cases[COORD.index(arrive)] = Piece(nom_piece, equipe, is_premier_coup=False)
                     self.cases[COORD.index(depart)] = Piece()
 
                 else:

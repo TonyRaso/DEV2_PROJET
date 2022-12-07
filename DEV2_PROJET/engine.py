@@ -1,4 +1,4 @@
-from piece import *
+import re
 
 COORD = [
     'a15', 'b15', 'c15', 'd15', 'e15', 'f15', 'g15', 'h15', 'i15', 'j15', 'k15', 'l15', 'm15', 'n15', 'o15',
@@ -37,10 +37,13 @@ def verif_format_coup(coup):
     if len(coup) == 0:
         print("Format non valide")
         return False
-    piece = coup[0]
+    regex = re.compile(r"[pfctd][a-o][01]\d[a-o][01]\d")
+    if regex.match(coup) is None:
+        print("Format non valide")
+        return False
     depart = coup[1:4]
     arrive = coup[4:7]
-    if (piece in LIST_PIECE) and (depart in COORD) and (arrive in COORD):
+    if (depart in COORD) and (arrive in COORD):
         return True
     else:
         print("Format non valide")
@@ -64,19 +67,19 @@ def is_case_interdit(plateau, coup):
     return True
 
 
-def is_place_occupee(plateau, move, equipe):
+def is_place_occupee(plateau, coup, equipe):
     """
-    Determine si la case est occupé par une piece de la meme équipe lors d'un mouvement
+    Determine si la case est occupée par une piece de la meme équipe lors d'un mouvement
     :param plateau: passe la table de jeu en parametre
     :type plateau: objet de class Plateau
-    :param move: le déplacement mémorisé via l input main
-    :type move: string
+    :param coup: le déplacement mémorisé via l input main
+    :type coup: string
     :param equipe: determine l'equipe a qui appartient la piece
     :type equipe: string
     :return: retourne si oui ou non la case est occupé par une piece alliée
     :rtype: boolean
     """
-    arrive = move[4:7]
+    arrive = coup[4:7]
     if plateau.cases[COORD.index(arrive)].nom != "" and plateau.cases[COORD.index(arrive)].equipe == equipe:
         # Vérifie que la case n'est pas occupée
         print("case occupée par une pièce alliée")
@@ -120,12 +123,12 @@ def verif_piece_dans_vecteur(plateau, arrive, depart, vecteur, print_enable=True
     return False
 
 
-def verif_deplacment(move, plateau, equipe, print_enable=True):
+def verif_deplacment(coup, plateau, equipe, print_enable=True):
     """
     Methode qui vérifie l'intégralité des regles de jeu a prendre en compte pour un déplacement
     inclus la méthode  verif_piece_dans_vecteur en ce qui concerne le vecteur libre
-    :param move: le déplacement mémorisé via l input main
-    :type move: string
+    :param coup: le déplacement mémorisé via l input main
+    :type coup: string
     :param plateau: passe la table de jeu en parametre
     :type plateau: objet de class Plateau
     :param equipe: determine l'equipe a qui appartient la piece
@@ -136,15 +139,16 @@ def verif_deplacment(move, plateau, equipe, print_enable=True):
     :rtype: boolean
     """
 
-    piece = move[0]
-    depart = move[1:4]
-    arrive = move[4:7]
+    piece = coup[0]
+    depart = coup[1:4]
+    arrive = coup[4:7]
     multi_premier_coup = 1
     if plateau.cases[COORD.index(depart)].Is_premier_coup:
         multi_premier_coup = 2
     if piece == "p":
         if equipe == "green":
-            if COORD.index(depart) - COORD.index(arrive) in [15 * multi_premier_coup, 15] and plateau.cases[COORD.index(arrive)].equipe == "white":
+            if COORD.index(depart) - COORD.index(arrive) in [15 * multi_premier_coup, 15] and plateau.cases[COORD.index(
+                    arrive)].equipe == "white":
                 return True
             elif plateau.cases[COORD.index(arrive)].equipe != "white" and COORD.index(depart) - COORD.index(arrive) in [
                 14, 16]:
@@ -154,7 +158,8 @@ def verif_deplacment(move, plateau, equipe, print_enable=True):
                     print("coup impossible")
                 return False
         elif equipe == "blue":
-            if COORD.index(arrive) - COORD.index(depart) in [15 * multi_premier_coup, 15] and plateau.cases[COORD.index(arrive)].equipe == "white":
+            if COORD.index(arrive) - COORD.index(depart) in [15 * multi_premier_coup, 15] and plateau.cases[COORD.index(
+                    arrive)].equipe == "white":
                 return True
             elif plateau.cases[COORD.index(arrive)].equipe != "white" and COORD.index(arrive) - COORD.index(depart) in [
                 14, 16]:
@@ -164,7 +169,8 @@ def verif_deplacment(move, plateau, equipe, print_enable=True):
                     print("coup impossible")
                 return False
         elif equipe == "red":
-            if COORD.index(arrive) - COORD.index(depart) in [1 * multi_premier_coup, 1] and plateau.cases[COORD.index(arrive)].equipe == "white":
+            if COORD.index(arrive) - COORD.index(depart) in [1 * multi_premier_coup, 1] and plateau.cases[COORD.index(
+                    arrive)].equipe == "white":
                 return True
             elif plateau.cases[COORD.index(arrive)].equipe != "white" and COORD.index(arrive) - COORD.index(depart) in [
                 -14, 16]:
@@ -174,7 +180,8 @@ def verif_deplacment(move, plateau, equipe, print_enable=True):
                     print("coup impossible")
                 return False
         elif equipe == "yellow":
-            if COORD.index(depart) - COORD.index(arrive) in [1 * multi_premier_coup, 1] and plateau.cases[COORD.index(arrive)].equipe == "white":
+            if COORD.index(depart) - COORD.index(arrive) in [1 * multi_premier_coup, 1] and plateau.cases[COORD.index(
+                    arrive)].equipe == "white":
                 return True
             elif plateau.cases[COORD.index(arrive)].equipe != "white" and COORD.index(depart) - COORD.index(arrive) in [
                 16, -14]:
@@ -210,7 +217,6 @@ def verif_deplacment(move, plateau, equipe, print_enable=True):
 
     elif piece == "d":
         if depart[1:4] == arrive[1:4]:  # déplacement horizontal
-            distance = int(COORD.index(arrive) - COORD.index(depart))
             for k in range(min(COORD.index(arrive), COORD.index(depart)) + 1,
                            max(COORD.index(arrive), COORD.index(depart))):
                 # parcour le plateau entre les deux cases depart et arrivée
@@ -224,7 +230,7 @@ def verif_deplacment(move, plateau, equipe, print_enable=True):
                                         print_enable)  # deplacement vetrical + diagonale
 
 
-def Is_contre_attaque_sur_flag_possible(plateau, equipe):
+def is_contre_attaque_sur_flag_possible(plateau, equipe):
     """
     Determine si il y a lieu de réaliser une contre attaque
     :param plateau: passe la table de jeu en parametre
@@ -254,7 +260,7 @@ def Is_contre_attaque_sur_flag_possible(plateau, equipe):
         return coup_possible
 
 
-def Is_drapeau_prenable(plateau):
+def is_drapeau_prenable(plateau):
     """
     Determine si le drapeau est prenable par n'importe quel piece (pour les regles de fin)
     :param plateau: passe la table de jeu en parametre

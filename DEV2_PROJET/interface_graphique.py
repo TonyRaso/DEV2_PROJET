@@ -76,7 +76,7 @@ def selection_case(ecran, case_cliquee):
         ecran.blit(s, (col * TAILLE_CASE, row * TAILLE_CASE))
 
 
-def drawGameState(ecran, plateau, case_cliquee, equipe_en_jeu):
+def draw_game_state(ecran, plateau, case_cliquee, equipe_en_jeu):
     """
     Responsable de tout les graphismes dans le jeux (utilise selection equipe et selection case)
     :param ecran: la fenetre du gui renvoyé par py.game
@@ -92,7 +92,7 @@ def drawGameState(ecran, plateau, case_cliquee, equipe_en_jeu):
     """
 
     afficher_plateau(ecran)  # draw squares on the board
-    drawPieces(ecran, plateau)  # draw pieces on top of those squares
+    draw_pieces(ecran, plateau)  # draw pieces on top of those squares
     selection_case(ecran, case_cliquee)  # highlight case choisie
     selection_equipe(ecran, plateau, equipe_en_jeu)  # highlight equipe en jeu
 
@@ -115,7 +115,7 @@ def afficher_plateau(ecran):
                         p.Rect(column * TAILLE_CASE, row * TAILLE_CASE, TAILLE_CASE, TAILLE_CASE))
 
 
-def drawPieces(screen, plateau):
+def draw_pieces(screen, plateau):
     """
     Affiche les pieces par dessus les cases
     :param screen:la fenetre du gui renvoyé par py.game
@@ -131,8 +131,8 @@ def drawPieces(screen, plateau):
         for col in range(15):
             piece = str(plateau[count])
             if piece != "." and piece != " ":
-                screen.blit(IMAGES[piece + plateau[count].equipe],
-                        p.Rect(col * TAILLE_CASE, row * TAILLE_CASE, TAILLE_CASE, TAILLE_CASE))
+                screen.blit(IMAGES[piece + plateau[count].equipe], p.Rect(col * TAILLE_CASE, row * TAILLE_CASE,
+                                                                         TAILLE_CASE, TAILLE_CASE))
 
             elif piece == " ":
                 screen.blit(IMAGES[plateau[count].equipe],
@@ -142,7 +142,7 @@ def drawPieces(screen, plateau):
     screen.blit(IMAGES["Xwhite"], p.Rect(7 * TAILLE_CASE, 7 * TAILLE_CASE, TAILLE_CASE, TAILLE_CASE))
 
 
-class GUI_jeu(Jeu):
+class GuiJeu(Jeu):
     def __init__(self, plateau=board.Plateau(), joueurs=None, nombre_tour=0, nmbr_tour_plateau=0):
         """
         Classe enfant de jeu,ajoute l'interface graphique
@@ -216,8 +216,8 @@ class GUI_jeu(Jeu):
                                         contre_attaque_finie = False
                                         case_cliquee = 0  # deselect
                                         clique_joueur = []  # clear clicks
-                                        print(engine.Is_contre_attaque_sur_flag_possible(self.plateau, equipe_drapeau))
-                                        if engine.Is_contre_attaque_sur_flag_possible(self.plateau, equipe_drapeau):
+                                        print(engine.is_contre_attaque_sur_flag_possible(self.plateau, equipe_drapeau))
+                                        if engine.is_contre_attaque_sur_flag_possible(self.plateau, equipe_drapeau):
                                             while not contre_attaque_finie:  # contre-attaque
                                                 for i in p.event.get():
                                                     if i.type == p.QUIT:
@@ -249,7 +249,7 @@ class GUI_jeu(Jeu):
                                                                 clique_joueur = []
                                                                 continue
 
-                                                            if move in engine.Is_contre_attaque_sur_flag_possible(
+                                                            if move in engine.is_contre_attaque_sur_flag_possible(
                                                                     self.plateau, equipe_drapeau):
                                                                 # vérifie si format correct et place libre
                                                                 # et case pas interdite
@@ -263,7 +263,7 @@ class GUI_jeu(Jeu):
 
                                                 clock.tick(15)
                                                 p.display.flip()
-                                                drawGameState(ecran, self.plateau.cases, case_cliquee, equipe_drapeau)
+                                                draw_game_state(ecran, self.plateau.cases, case_cliquee, equipe_drapeau)
                                                 # fin contre attaque
                                     elif arrivee != "h08" or equipe_drapeau == "white" and arrivee == "h08":
                                         # on joue le coup normal
@@ -325,7 +325,7 @@ class GUI_jeu(Jeu):
                                     joueur_pts_bonus = self.joueur_max_point()
                                     self.fin_partie(joueur_pts_bonus)
 
-                            if not engine.Is_drapeau_prenable(self.plateau) and \
+                            if not engine.is_drapeau_prenable(self.plateau) and \
                                     self.plateau.cases[board.COORD.index("h08")].equipe != "white":
                                 # si drapeau n'est pas prenable et que quelqu'un est dessus
                                 self.fin_partie(self.plateau.cases[board.COORD.index("h08")].equipe)
@@ -335,23 +335,23 @@ class GUI_jeu(Jeu):
 
             clock.tick(15)
             p.display.flip()
-            drawGameState(ecran, self.plateau.cases, case_cliquee, equipe_en_jeu)
+            draw_game_state(ecran, self.plateau.cases, case_cliquee, equipe_en_jeu)
 
 
 if __name__ == "__main__":
 
-    joueurs = ["yellow", "blue", "red", "green"]
+    joueur1 = ["yellow", "blue", "red", "green"]
 
     nmbr_joueurs = args.nombre_joueur
     if not nmbr_joueurs:
         nmbr_joueurs = 4
 
-    joueurs = joueurs[0:int(nmbr_joueurs)]
+    joueur1 = joueur1[0:int(nmbr_joueurs)]
 
     afficher_score = args.score
 
     plateau1 = board.Plateau()
-    Game2 = GUI_jeu(plateau1, joueurs)
+    Game2 = GuiJeu(plateau1, joueur1)
     Game2.jeu_visuel()
 
     if afficher_score == "oui":
