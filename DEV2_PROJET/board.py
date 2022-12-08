@@ -1,4 +1,3 @@
-import engine
 from piece import Piece
 
 JOUEURS_POSSIBLE = ["yellow", "blue", "red", "green"]

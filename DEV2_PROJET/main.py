@@ -159,7 +159,7 @@ class Jeu:
                 joueur_pts_bonus = self.joueur_max_point()
                 self.fin_partie(joueur_pts_bonus)
 
-        if not engine.Is_drapeau_prenable(self.plateau) and \
+        if not engine.is_drapeau_prenable(self.plateau) and \
                 self.plateau.cases[board.COORD.index("h08")].equipe != "white":
             # si drapeau n'est pas prenable et que quelqu'un est dessus
             self.fin_partie(self.plateau.cases[board.COORD.index("h08")].equipe)
@@ -170,7 +170,7 @@ class Jeu:
     def validation_coup(self, coup, equipe_en_jeu):
         return (engine.verif_format_coup(coup) and engine.is_place_occupee(self.plateau, coup, equipe_en_jeu)
                 and engine.is_case_interdit(self.plateau, coup) and
-                engine.verif_deplacement(coup, self.plateau, equipe_en_jeu))
+                engine.verif_deplacment(coup, self.plateau, equipe_en_jeu))
 
     def jeu(self):
         """
@@ -206,7 +206,7 @@ class Jeu:
                         # si le drapeau est pris, on devra lancer une contre-attaque
                         self.plateau.deplacement(self.plateau, move, equipe_en_jeu)
                         contre_attaque_finie = False
-                        if engine.Is_contre_attaque_sur_flag_possible(self.plateau, equipe_drapeau):
+                        if engine.is_contre_attaque_sur_flag_possible(self.plateau, equipe_drapeau):
                             while not contre_attaque_finie:
                                 print("tour du joueur", equipe_drapeau)
                                 move = input(
@@ -264,7 +264,7 @@ class Jeu:
                     joueur_pts_bonus = self.joueur_max_point()
                     self.fin_partie(joueur_pts_bonus)
 
-            if not engine.Is_drapeau_prenable(self.plateau) and \
+            if not engine.is_drapeau_prenable(self.plateau) and \
                     self.plateau.cases[board.COORD.index("h08")].equipe != "white":
                 # si drapeau n'est pas prenable et que quelqu'un est dessus
                 self.fin_partie(self.plateau.cases[board.COORD.index("h08")].equipe)
