@@ -2,6 +2,7 @@ import argparse
 import board
 import engine
 import json
+#import constante
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--nombre-joueur", type=int, help="nombre de joueur, entre 2 et 4")
@@ -65,7 +66,6 @@ class Jeu:
             for equipe in dic:
                 equipes[equipe] += dic[equipe]
         min_pts = 999
-        joueur_perdant = str()
         for joueur in equipes:
             if equipes[joueur] <= min_pts:
                 min_pts = equipes[joueur]
@@ -123,6 +123,55 @@ class Jeu:
         print("Féliciation au joueur " + joueur_gagnant + " !!!")
         self.Is_jeu_en_cours = False
 
+    def actualiser_plateau_fin_de_tour(self, equipe_en_jeu):
+        if self.plateau.cases[board.COORD.index("h08")].equipe != "white":  # drapeau pris par une équipe
+            self.points_joueur[self.plateau.cases[board.COORD.index("h08")].equipe] += 5
+            self.Is_drapeu_neutre = False
+            # si le drapeau est pris, compteur de tour de drapeau neutre = 0
+            self.count_tour_drapeau_neutre = 0
+            print(self.points_joueur)
+
+        equipe_en_jeu = self.joueur_prochain(equipe_en_jeu)
+
+        self.nombre_tour += 1
+        if self.nombre_tour % len(self.joueurs) == 0:  # compte le nmbr de tour de plateau
+            self.nmbr_tour_plateau += 1
+
+        return equipe_en_jeu
+
+    def verif_regle_fin_tour(self):
+        if self.nmbr_tour_plateau == 10 and self.Is_drapeu_neutre:
+            # drapeau pas pris avant le 10ème tour de plateau
+            for i in range(len(self.joueurs)):  # on met des malus
+                self.points_joueur[self.joueurs[-i]] -= (20 - 5 * i)
+            self.Is_jeu_en_cours = False
+
+        if not self.Is_drapeu_neutre and self.plateau.cases[board.COORD.index("h08")].equipe == "white":
+            # drapeau a déjà été pris MAIS il n'est plus occupé
+            self.count_tour_drapeau_neutre += 1
+            if self.count_tour_drapeau_neutre >= 5:
+                joueur_pts_bonus = self.joueur_max_point()
+                self.fin_partie(joueur_pts_bonus)
+
+        for equipe in self.joueurs:
+            if self.points_joueur[equipe] >= 100:
+                # partie finie si on joueur gagne 100pts
+                joueur_pts_bonus = self.joueur_max_point()
+                self.fin_partie(joueur_pts_bonus)
+
+        if not engine.Is_drapeau_prenable(self.plateau) and \
+                self.plateau.cases[board.COORD.index("h08")].equipe != "white":
+            # si drapeau n'est pas prenable et que quelqu'un est dessus
+            self.fin_partie(self.plateau.cases[board.COORD.index("h08")].equipe)
+
+        if self.nombre_tour == 100:
+            self.Is_jeu_en_cours = False
+
+    def validation_coup(self, coup, equipe_en_jeu):
+        return (engine.verif_format_coup(coup) and engine.is_place_occupee(self.plateau, coup, equipe_en_jeu)
+                and engine.is_case_interdit(self.plateau, coup) and
+                engine.verif_deplacement(coup, self.plateau, equipe_en_jeu))
+
     def jeu(self):
         """
         Joue la partie du programme en console et prend les inputs
@@ -140,6 +189,7 @@ class Jeu:
             print("tour du joueur", equipe_en_jeu)
             move = input("Quel pièce voulez vous déplacer vers quel case ? (Format, pf02f03 = pion en f02 vers f03) : ")
 
+            # ce if est remplaçable par self.validation_coup(move, equipe_en_jeu)
             if engine.verif_format_coup(move) \
                     and engine.is_place_occupee(self.plateau, move, equipe_en_jeu) and engine.is_case_interdit(
                 self.plateau, move):
@@ -150,18 +200,19 @@ class Jeu:
                     print("Vous ne possédez pas de pion sur cette case!")
                     continue
 
-                if engine.verif_deplacment(move, self.plateau, equipe_en_jeu):  # on peut jouer le coup
+                if engine.verif_deplacment(move, self.plateau, equipe_en_jeu): # on peut jouer le coup r.validation_coup
                     equipe_drapeau = self.plateau.cases[board.COORD.index("h08")].equipe
                     if equipe_drapeau != "white" and move[4:7] == "h08":
                         # si le drapeau est pris, on devra lancer une contre-attaque
                         self.plateau.deplacement(self.plateau, move, equipe_en_jeu)
                         contre_attaque_finie = False
-                        if engine.is_contre_attaque_sur_flag_possible(self.plateau, equipe_drapeau):
+                        if engine.Is_contre_attaque_sur_flag_possible(self.plateau, equipe_drapeau):
                             while not contre_attaque_finie:
                                 print("tour du joueur", equipe_drapeau)
                                 move = input(
                                     "Quel pièce voulez vous déplacer vers quel case ? "
                                     "(Format, pf02f03 = pion en f02 vers f03) : ")
+                                # ce if est remplaçable par self.validation_coup(move, equipe_en_jeu)
                                 if engine.verif_format_coup(move) \
                                         and engine.is_place_occupee(self.plateau, move,
                                                                     equipe_drapeau) and engine.is_case_interdit(
@@ -171,12 +222,14 @@ class Jeu:
 
                     elif move[4:7] != "h08" or equipe_drapeau == "white" and move[4:7] == "h08":
                         # on joue le coup normal
+                        # ce if est remplaçable par self.validation_coup(move, equipe_en_jeu)
                         if engine.verif_format_coup(move) and engine.is_place_occupee(self.plateau, move,
                                                                                       equipe_en_jeu) and \
                                 engine.is_case_interdit(self.plateau, move):
                             if engine.verif_deplacment(move, self.plateau, equipe_en_jeu):  # on peut jouer le coup
                                 self.plateau.deplacement(self.plateau, move, equipe_en_jeu)
 
+                    # remplaçable par equipe_en_jeu = self.actualiser_plateau_fin_de_tour(equipe_en_jeu)
                     if self.plateau.cases[board.COORD.index("h08")].equipe != "white":  # drapeau pris par une équipe
                         self.points_joueur[self.plateau.cases[board.COORD.index("h08")].equipe] += 5
                         self.Is_drapeu_neutre = False
@@ -189,7 +242,9 @@ class Jeu:
                     self.nombre_tour += 1
                     if self.nombre_tour % len(self.joueurs) == 0:  # compte le nmbr de tour de plateau
                         self.nmbr_tour_plateau += 1
+                    # fin de self.fin_de_tour()
 
+            # peut être remplacé par self.actualiser_plateau_fin_de_tour()
             if self.nmbr_tour_plateau == 10 and self.Is_drapeu_neutre:
                 # drapeau pas pris avant le 10ème tour de plateau
                 for i in range(len(self.joueurs)):  # on met des malus
@@ -209,27 +264,28 @@ class Jeu:
                     joueur_pts_bonus = self.joueur_max_point()
                     self.fin_partie(joueur_pts_bonus)
 
-            if not engine.is_drapeau_prenable(self.plateau) and \
+            if not engine.Is_drapeau_prenable(self.plateau) and \
                     self.plateau.cases[board.COORD.index("h08")].equipe != "white":
                 # si drapeau n'est pas prenable et que quelqu'un est dessus
                 self.fin_partie(self.plateau.cases[board.COORD.index("h08")].equipe)
 
             if self.nombre_tour == 100:
                 self.Is_jeu_en_cours = False
+            # fin de self.verif_regle_fin_tour()
 
 
 if __name__ == "__main__":
-    joueur1 = ["yellow", "blue", "red", "green"]
+    joueurs1 = ["yellow", "blue", "red", "green"]
 
     nmbr_joueurs = args.nombre_joueur
     if not nmbr_joueurs:
         nmbr_joueurs = 4
-    joueur1 = joueur1[0:int(nmbr_joueurs)]
+    joueurs1 = joueurs1[0:int(nmbr_joueurs)]
 
     afficher_score = args.score
 
     plateau1 = board.Plateau()
-    Game1 = Jeu(plateau1, joueur1)
+    Game1 = Jeu(plateau1, joueurs1)
     Game1.jeu()
 
     if afficher_score == "oui":
