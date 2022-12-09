@@ -43,10 +43,9 @@ def selection_equipe(plateau, equipe_en_jeu, ecran):
 def selection_case(case_cliquee, ecran):
     """
     Souligne en bleu la case sur laquel on a clické
+    :param case_cliquee:
     :param ecran: la fenetre du gui renvoyé par py.game
     :type ecran: Objet de type Surface
-    :param  self.clique_joueur: la case cliquée
-    :type  self.clique_joueur: int
     :return: /
     :rtype: /
     """
@@ -185,8 +184,6 @@ class GuiJeu(Jeu):
         clock = p.time.Clock()
         ecran = p.display.set_mode((c.LARGEUR, c.HAUTEUR))
         ecran.fill(p.Color("white"))
-        self.case_cliquee = 0
-        self.clique_joueur = []
         p.init()
 
         equipe_en_jeu = self.joueur_prochain(c.JOUEURS_POSSIBLE[0])
