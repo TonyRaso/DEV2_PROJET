@@ -1,4 +1,3 @@
-
 # On déifnit toutes les contantes qu'on utilisera dans les fichiers
 
 COORD = [
@@ -20,20 +19,20 @@ COORD = [
 ]
 
 JOUEURS_POSSIBLE = ["yellow", "blue", "red", "green"]
-
 INPUT_VERS_PIECE = {"p": "PION", "f": "FOU", "d": "DAME", "t": "TOUR", "c": "CAVALIER"}
-
 LIST_PIECE = ["p", "c", "f", "t", "d"]
-
 vecteur_tour = [-15, 15]
 vecteur_fou = [16, -16, 14, -14]
 vecteur_dame = [-15, 15, -16, 16, -14, 14]
 coup_cavalier = [29, 31, 13, 17, -17, -13, -31, -29]
-
 LARGEUR = HAUTEUR = 600
 DIMENSION = 15
 TAILLE_CASE = HAUTEUR // DIMENSION
-IMAGES = {}
-
+SCORES_VIDE = {"green": 0, "red": 0, "blue": 0, "yellow": 0, }
 PTS_BONUS_VAINQEUR = 20
-
+PTS_PAR_TOUR = 5
+NMBR_MAX_TOUR_VIDE = 10
+NMBR_MAX_TOUR_SANS_REPRISER = 5
+MAX_PTS = 100
+NOM_IMAGES = ["Pred", "Cred", "Fred", "Tred", "Dred", "Pblue", "Cblue", "Fblue", "Tblue", "Dblue", "Pyellow", "Cyellow",
+              "Fyellow", "Tyellow", "Dyellow", "Pgreen", "Cgreen", "Fgreen", "Tgreen", "Dgreen", "Xwhite", "white"]
