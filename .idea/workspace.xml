@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="66541626-b853-414e-9db5-12657fb3d497" name="Changes" comment="" />
+    <list default="true" id="66541626-b853-414e-9db5-12657fb3d497" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/DEV2_PROJET.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/DEV2_PROJET.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEV2_PROJET/constante.py" beforeDir="false" afterPath="$PROJECT_DIR$/DEV2_PROJET/constante.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -26,15 +31,15 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "D:/GitHub/DEV2_PROJET",
-    "run.code.analysis.last.selected.profile": "pProject Default"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/GitHub/DEV2_PROJET&quot;,
+    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;
   }
-}]]></component>
+}</component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -65,6 +70,7 @@
       <workItem from="1670340810839" duration="9069000" />
       <workItem from="1670406536362" duration="5242000" />
       <workItem from="1670518467523" duration="314000" />
+      <workItem from="1670620558868" duration="3807000" />
     </task>
     <servers />
   </component>
@@ -83,8 +89,8 @@
     </option>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/DEV2_PROJET$interface_graphique.coverage" NAME="interface_graphique Coverage Results" MODIFIED="1670518721015" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/DEV2_PROJET" />
     <SUITE FILE_PATH="coverage/DEV2_PROJET$main.coverage" NAME="main Coverage Results" MODIFIED="1670410844951" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/DEV2_PROJET" />
+    <SUITE FILE_PATH="coverage/DEV2_PROJET$interface_graphique.coverage" NAME="interface_graphique Coverage Results" MODIFIED="1670411441480" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/DEV2_PROJET" />
     <SUITE FILE_PATH="coverage/DEV2_PROJET$engine.coverage" NAME="engine Coverage Results" MODIFIED="1670410649090" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/DEV2_PROJET" />
     <SUITE FILE_PATH="coverage/DEV2_PROJET$piece.coverage" NAME="piece Coverage Results" MODIFIED="1670409086273" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/DEV2_PROJET" />
     <SUITE FILE_PATH="coverage/DEV2_PROJET$board.coverage" NAME="board Coverage Results" MODIFIED="1670409099244" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/DEV2_PROJET" />

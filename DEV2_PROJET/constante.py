@@ -37,3 +37,10 @@ IMAGES = {}
 
 PTS_BONUS_VAINQEUR = 20
 
+FICHIER_POINTS = 'data.txt'
+DIC_EQUIPES = {"green": 0, "red": 0, "blue": 0, "yellow": 0, }
+MIN_POINTS = 999
+MAX_POINTS = -1
+CASE_DRAPEAU = "h08"
+EQUIPE_QUI_COMMENCE = "yellow"
+
