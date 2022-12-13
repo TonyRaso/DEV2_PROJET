@@ -140,25 +140,58 @@ class GuiJeu(Jeu):
 
     @staticmethod
     def recuperer_index_clique():
+        """
+
+        :return:
+        :rtype:
+        """
         location = p.mouse.get_pos()  # (x, y) location of the mouse
         col = location[0] // c.TAILLE_CASE
         row = location[1] // c.TAILLE_CASE
         return col + row * 15
 
     def reinitilaise_le_coup(self):
+        """
+
+        :return:
+        :rtype:
+        """
         self.clique_joueur = []
         self.case_cliquee = 0
 
     def clique_vers_coup(self):
+        """
+
+        :return:
+        :rtype:
+        """
         return str(self.plateau.cases[self.clique_joueur[0]]).lower() + c.COORD[self.clique_joueur[0]] + c.COORD[
             self.clique_joueur[1]]
 
     def rafraichissement_gui(self, clock, equipe, ecran):
+        """
+
+        :param clock:
+        :type clock:
+        :param equipe:
+        :type equipe:
+        :param ecran:
+        :type ecran:
+        :return:
+        :rtype:
+        """
         clock.tick(15)
         p.display.flip()
         draw_game_state(self.plateau.cases, self.case_cliquee, equipe, ecran)
 
     def gestion_clique(self, k):
+        """
+
+        :param k:
+        :type k:
+        :return:
+        :rtype:
+        """
         if k.type == p.QUIT:
             p.quit()
             sys.exit()

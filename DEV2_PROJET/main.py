@@ -6,6 +6,11 @@ import constante as c
 
 
 def argument_argparse():
+    """
+    Methode qui renvoi les arguments passés en commande sous la forme d'une liste
+    :return: Une liste qui contient les arguments
+    :rtype: Liste
+    """
     parser = argparse.ArgumentParser()
     parser.add_argument("--nombre-joueur", type=int, help="nombre de joueur, entre 2 et 4")
     parser.add_argument("--score", help="si vous voulez afficher les scores et le réinitialiser sinon "
@@ -111,7 +116,14 @@ class Jeu:
         self.Is_jeu_en_cours = False
 
     def actualiser_plateau_fin_de_tour(self, equipe_en_jeu):
-        if self.couleur_drapeau() != "white":  # drapeau pris par une équipe
+        """
+        Methode qui set a actualiser le plateau en fin de tour
+        :param equipe_en_jeu: Une liste qui contient les joueurs de la partie
+        :type equipe_en_jeu: Liste de string
+        :return:
+        :rtype:
+        """
+         if self.couleur_drapeau() != "white":  # drapeau pris par une équipe
             self.points_joueur[self.couleur_drapeau()] += c.PTS_PAR_TOUR
             self.Is_drapeu_neutre = False
             # si le drapeau est pris, compteur de tour de drapeau neutre = 0
@@ -127,6 +139,13 @@ class Jeu:
         return equipe_en_jeu
 
     def verif_regle_fin_tour(self):
+        """
+        Méthode qui vérifie les conditions des regles a la fin de chaque tour
+        :param self: ?
+        :type self: ?
+        :return: /
+        :rtype: /
+        """
         if self.nmbr_tour_plateau == c.NMBR_MAX_TOUR_VIDE and self.Is_drapeu_neutre:
             # drapeau pas pris avant le 10ème tour de plateau
             for i in range(len(self.joueurs)):  # on met des malus
@@ -151,18 +170,54 @@ class Jeu:
             self.fin_partie(self.couleur_drapeau())
 
     def validation_coup(self, coup, equipe_en_jeu):
+        """
+        Méthode qui valide le coup
+        :param coup: le déplacement mémorisé via l input main
+        :type coup: string
+        :param equipe_en_jeu: Une liste qui contient les joueurs de la partie
+        :type equipe_en_jeu: Liste de string
+        :return: ?
+        :rtype: ?
+        """
         return (engine.verif_format_coup(coup) and engine.is_place_occupee(self.plateau, coup, equipe_en_jeu)
                 and engine.is_case_interdit(self.plateau, coup) and
                 engine.verif_deplacment(coup, self.plateau, equipe_en_jeu))
 
     def is_pas_bonne_equipe(self, equipe_en_jeu, move):
+        """
+
+        :param self:
+        :type self:
+        :param equipe_en_jeu: Une liste qui contient les joueurs de la partie
+        :type equipe_en_jeu: Liste de string
+        :param move:
+        :type move:
+        :return:
+        :rtype:
+        """
         return equipe_en_jeu != self.plateau.cases[c.COORD.index(move[1:4])].equipe
 
     @staticmethod
     def is_prise_de_drapeau(equipe_drapeau, move):
+        """
+
+        :param equipe_drapeau:
+        :type equipe_drapeau:
+        :param move:
+        :type move:
+        :return:
+        :rtype:
+        """
         return equipe_drapeau != "white" and move[4:7] == "h08"
 
     def couleur_drapeau(self):
+        """
+
+        :param self:
+        :type self:
+        :return:
+        :rtype:
+        """
         return self.plateau.cases[c.COORD.index("h08")].equipe
 
     def jeu(self):
