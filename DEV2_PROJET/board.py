@@ -5,7 +5,7 @@ import constante as c
 class Plateau:
     def __init__(self):
         """
-        qui comprend la position initial des pieces de chaques joueurs ainsi que les cases interdites
+        Méthode qui initialise un objet Plateau, qui comprend la position initiale des pieces de chaque joueur ainsi que les cases interdites
         :param /
         :return /
         """
@@ -83,7 +83,7 @@ class Plateau:
 
     def init_plateau(self, joueurs=""):
         """
-        adapte le plateau au nombre de joueur
+        Adapte le plateau au nombre de joueur
         :param joueurs: liste de string representant les joueurs
         :type joueurs: liste de string
         :return: /
@@ -129,7 +129,7 @@ class Plateau:
 
     def deplacement(self, plateau, coup, equipe):
         """
-        Methode qui effectue le déplacement de la piece lors du tours (apres les differentes verification de engine)
+        Methode qui éffectue le déplacement de la piece lors du tours (apres les differentes verification de engine)
         et qui vérifie les cas de mouvements impossible indépendants
         :param plateau: la table dans l état actuelle
         :type plateau: un objet de type Plateau

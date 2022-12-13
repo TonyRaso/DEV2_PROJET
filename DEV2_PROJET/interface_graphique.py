@@ -141,9 +141,9 @@ class GuiJeu(Jeu):
     @staticmethod
     def recuperer_index_clique():
         """
-
-        :return:
-        :rtype:
+        Méhode qui récupère les coordonnés de la case cliquée
+        :return: les coordonnés de la case cliquée
+        :rtype: Int
         """
         location = p.mouse.get_pos()  # (x, y) location of the mouse
         col = location[0] // c.TAILLE_CASE
@@ -152,25 +152,25 @@ class GuiJeu(Jeu):
 
     def reinitilaise_le_coup(self):
         """
-
-        :return:
-        :rtype:
+        Méthode qui réinitialise le coup
+        :return: /
+        :rtype: /
         """
         self.clique_joueur = []
         self.case_cliquee = 0
 
     def clique_vers_coup(self):
         """
-
-        :return:
-        :rtype:
+        Méthode qui retourne une string qui indique la case cliquée dans le format de commande coup
+        :return: La déscription du coup ex : pg05g06
+        :rtype: String
         """
         return str(self.plateau.cases[self.clique_joueur[0]]).lower() + c.COORD[self.clique_joueur[0]] + c.COORD[
             self.clique_joueur[1]]
 
     def rafraichissement_gui(self, clock, equipe, ecran):
         """
-
+        Méthode qui force le rafraichissement de l'interface graphique
         :param clock:
         :type clock:
         :param equipe:

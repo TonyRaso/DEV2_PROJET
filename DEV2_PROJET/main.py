@@ -51,7 +51,7 @@ class Jeu:
         :rtype: /
         """
         total_scores = json.dumps(self.points_joueur)
-        with open('data.txt', "a") as file:
+        with open(c.FICHIER_POINTS, "a") as file:
             file.write(total_scores + "\n")
 
     def afficher_score(self):
@@ -64,7 +64,7 @@ class Jeu:
 
         self.ajout_score()
         try:
-            data_locale = open('data.txt')
+            data_locale = open(c.FICHIER_POINTS)
         except FileNotFoundError:
             print('Fichier introuvable.')
         scores_equipes = c.SCORES_VIDE
@@ -77,7 +77,7 @@ class Jeu:
 
         print("le joueur qui a perdu est " + joueur_perdant + "\nVoici les scores exact :" + str(scores_equipes))
         print("les score ont été réinitialisé")
-        with open('data.txt', "w") as fichier_a_vider:
+        with open(c.FICHIER_POINTS, "w") as fichier_a_vider:
             fichier_a_vider.write("")
 
     def joueur_prochain(self, equipe_en_cours):
@@ -181,7 +181,7 @@ class Jeu:
         """
         return (engine.verif_format_coup(coup) and engine.is_place_occupee(self.plateau, coup, equipe_en_jeu)
                 and engine.is_case_interdit(self.plateau, coup) and
-                engine.verif_deplacment(coup, self.plateau, equipe_en_jeu))
+                engine.verif_deplacement(coup, self.plateau, equipe_en_jeu))
 
     def is_pas_bonne_equipe(self, equipe_en_jeu, move):
         """
@@ -229,7 +229,7 @@ class Jeu:
 
         self.plateau.init_plateau(self.joueurs)
         self.plateau.afficher_plateau()
-        equipe_en_jeu = self.joueur_prochain("yellow")
+        equipe_en_jeu = self.joueur_prochain(c.EQUIPE_QUI_COMMENCE)
         # force la première équipe à jouer à être après le yellow ( donc green -> red -> blue )
 
         while self.Is_jeu_en_cours:

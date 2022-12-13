@@ -75,7 +75,7 @@ def verif_piece_dans_vecteur(plateau, arrive, depart, vecteur):
     :param vecteur: la liste des déplacement pour le type de piece correspondant
     :type vecteur: Liste de int
     :return: si le champ est libre pour le déplacement ou pas
-    :rtype: Bollean
+    :rtype: Boolean
     """
 
     for n in vecteur:
@@ -93,6 +93,23 @@ def verif_piece_dans_vecteur(plateau, arrive, depart, vecteur):
 
 
 def verif_pion(arrive, case1, case2, liste_deplacement, liste_deplacement_prise, plateau):
+    """
+
+    :param arrive: la partie de coup qui correspond a son arrivée
+    :type arrive: string
+    :param case1:
+    :type case1:
+    :param case2:
+    :type case2:
+    :param liste_deplacement:
+    :type liste_deplacement:
+    :param liste_deplacement_prise:
+    :type liste_deplacement_prise:
+    :param plateau:
+    :type plateau:
+    :return:
+    :rtype:
+    """
     if c.COORD.index(case1) - c.COORD.index(case2) in liste_deplacement and \
             plateau.cases[c.COORD.index(arrive)].equipe == "white":
         return True
@@ -104,6 +121,17 @@ def verif_pion(arrive, case1, case2, liste_deplacement, liste_deplacement_prise,
 
 
 def verif_deplacement_horizontal(arrive, depart, plateau):
+    """
+    Methode qui vérifie si le déplacement horizontal est possible ou pas
+    :param arrive: la partie de coup qui correspond a son arrivée
+    :type arrive: string
+    :param depart: la partie de coup qui correspond a son départ
+    :type depart: string
+    :param plateau: passe la table de jeu en parametre
+    :type plateau: objet de class Plateau
+    :return: si le déplacement horizontal est possible ou pas
+    :rtype: Boolean
+    """
     for k in range(min(c.COORD.index(arrive), c.COORD.index(depart)) + 1,
                    max(c.COORD.index(arrive), c.COORD.index(depart))):
         # parcour le plateau entre les deux cases depart et arrivée
@@ -113,13 +141,27 @@ def verif_deplacement_horizontal(arrive, depart, plateau):
 
 
 def verif_deplacement_vecteur_et_horizontal(arrive, depart, plateau, vecteur):
+    """
+    Methode qui vérifie si le déplacement horizontal et vecteur, est possible grace a la methode verif_deplacement_horizontal
+    sinon verifie si une piece est dans le chemin grace a la methode verif_piece_dans_vecteur
+    :param arrive: la partie de coup qui correspond a son arrivée
+    :type arrive: string
+    :param depart: la partie de coup qui correspond a son départ
+    :type depart: string
+    :param plateau: passe la table de jeu en parametre
+    :type plateau: objet de class Plateau
+    :param vecteur: la liste des déplacement pour le type de piece correspondant
+    :type vecteur: Liste de int
+    :return: Retourne le Boolean de la methode verif_déplacement horizontal ou celui de piece_dans_vecteur
+    :rtype: Boolean
+    """
     if depart[1:4] == arrive[1:4]:  # déplacement horizontal
         return verif_deplacement_horizontal(arrive, depart, plateau)
 
     return verif_piece_dans_vecteur(plateau, arrive, depart, vecteur)
 
 
-def verif_deplacment(coup, plateau, equipe):
+def verif_deplacement(coup, plateau, equipe):
     """
     Methode qui vérifie l'intégralité des regles de jeu a prendre en compte pour un déplacement
     inclus la méthode  verif_piece_dans_vecteur en ce qui concerne le vecteur libre
@@ -179,11 +221,10 @@ def is_contre_attaque_sur_flag_possible(plateau, equipe):
     :rtype:boolean
     """
     coup_possible = []
-    case_flag = "h08"
     for case in plateau.cases:
         if case.equipe == equipe:
-            move = case.nom[0].lower() + c.COORD[plateau.cases.index(case)] + case_flag
-            if verif_deplacment(move, plateau, equipe):
+            move = case.nom[0].lower() + c.COORD[plateau.cases.index(case)] + c.CASE_DRAPEAU
+            if verif_deplacement(move, plateau, equipe):
                 coup_possible.append(move)
 
     if len(coup_possible) == 0:
@@ -193,11 +234,37 @@ def is_contre_attaque_sur_flag_possible(plateau, equipe):
 
 
 def verif_pion_horizontal_peut_prendre_drapeau(plateau, piece, liste_colonne_possible, liste_ligne_possible):
+    """
+
+    :param plateau: passe la table de jeu en parametre
+    :type plateau: objet de class Plateau
+    :param piece:
+    :type piece:
+    :param liste_colonne_possible:
+    :type liste_colonne_possible:
+    :param liste_ligne_possible:
+    :type liste_ligne_possible:
+    :return:
+    :rtype:
+    """
     return c.COORD[plateau.cases.index(piece)][0] in liste_colonne_possible and (
             c.COORD[plateau.cases.index(piece)][1:3] in liste_ligne_possible)
 
 
 def verif_pion_vertical_peut_prendre_drapeau(plateau, piece, liste_colonne_possible, liste_ligne_possible):
+    """
+
+    :param plateau: passe la table de jeu en parametre
+    :type plateau: objet de class Plateau
+    :param piece:
+    :type piece:
+    :param liste_colonne_possible:
+    :type liste_colonne_possible:
+    :param liste_ligne_possible:
+    :type liste_ligne_possible:
+    :return:
+    :rtype:
+    """
     return (c.COORD[plateau.cases.index(piece)][0] in liste_colonne_possible) \
            and int(c.COORD[plateau.cases.index(piece)][1:3]) in liste_ligne_possible
 

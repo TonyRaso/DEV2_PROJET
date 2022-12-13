@@ -1,4 +1,4 @@
-# On déifnit toutes les contantes qu'on utilisera dans les fichiers
+# On définit toutes les constantes qu'on utilisera dans les différents fichiers
 
 COORD = [
     'a15', 'b15', 'c15', 'd15', 'e15', 'f15', 'g15', 'h15', 'i15', 'j15', 'k15', 'l15', 'm15', 'n15', 'o15',
@@ -36,3 +36,6 @@ NMBR_MAX_TOUR_SANS_REPRISER = 5
 MAX_PTS = 100
 NOM_IMAGES = ["Pred", "Cred", "Fred", "Tred", "Dred", "Pblue", "Cblue", "Fblue", "Tblue", "Dblue", "Pyellow", "Cyellow",
               "Fyellow", "Tyellow", "Dyellow", "Pgreen", "Cgreen", "Fgreen", "Tgreen", "Dgreen", "Xwhite", "white"]
+FICHIER_POINTS = 'data.txt'
+CASE_DRAPEAU = "h08"
+EQUIPE_QUI_COMMENCE = "yellow"
