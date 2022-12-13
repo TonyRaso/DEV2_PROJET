@@ -32,10 +32,10 @@ def selection_equipe(plateau, equipe_en_jeu, ecran):
     """
     for case in range(len(plateau)):
         if plateau[case].equipe == equipe_en_jeu:
-            row = int(case / 15)
-            col = case % 15
+            row = int(case / c.DIMENSION)
+            col = case % c.DIMENSION
             s = p.Surface((c.TAILLE_CASE, c.TAILLE_CASE))
-            s.set_alpha(40)  # transparency value 0 -> transparent, 255 -> opaque
+            s.set_alpha(c.TRANSPARENCE_SELECTION_EQUIPE_GUI)  # transparency value 0 -> transparent, 255 -> opaque
             s.fill(p.Color('yellow'))
             ecran.blit(s, (col * c.TAILLE_CASE, row * c.TAILLE_CASE))
 
@@ -54,7 +54,7 @@ def selection_case(case_cliquee, ecran):
         col = case_cliquee % c.DIMENSION
         # highlight selected square
         s = p.Surface((c.TAILLE_CASE, c.TAILLE_CASE))
-        s.set_alpha(c.TRANSPARENCE_GUI)  # transparency value 0 -> transparent, 255 -> opaque
+        s.set_alpha(c.TRANSPARENCE_SELECTION_GUI)  # transparency value 0 -> transparent, 255 -> opaque
         s.fill(p.Color('blue'))
         ecran.blit(s, (col * c.TAILLE_CASE, row * c.TAILLE_CASE))
 
@@ -168,29 +168,26 @@ class GuiJeu(Jeu):
         return str(self.plateau.cases[self.clique_joueur[0]]).lower() + c.COORD[self.clique_joueur[0]] + c.COORD[
             self.clique_joueur[1]]
 
-    def rafraichissement_gui(self, clock, equipe, ecran):
+    def rafraichissement_gui(self, equipe, ecran):
         """
         Méthode qui force le rafraichissement de l'interface graphique
-        :param clock:
-        :type clock:
-        :param equipe:
-        :type equipe:
-        :param ecran:
-        :type ecran:
-        :return:
-        :rtype:
+        :param equipe: equipe qui est en jeu
+        :type equipe: String
+        :param ecran: la fenetre du gui renvoyé par py.game
+        :type ecran: Objet de type Surface
+        :return: /
+        :rtype: /
         """
-        clock.tick(15)
         p.display.flip()
         draw_game_state(self.plateau.cases, self.case_cliquee, equipe, ecran)
 
     def gestion_clique(self, k):
         """
-
-        :param k:
-        :type k:
-        :return:
-        :rtype:
+        Méthode qui sauvegarde les cliques effectué par le joueur et signal lorsque le joueurs à fais 2 clique d'affilé
+        :param k: evenement reçu d'un event listener mis sur le clique de la souris de l'utilisateur
+        :type k: object de type Eventlist
+        :return: Renvoie si les joueurs a fait 2 cliques ou pas
+        :rtype: Booléen
         """
         if k.type == p.QUIT:
             p.quit()
@@ -214,7 +211,6 @@ class GuiJeu(Jeu):
         :rtype: /
         """
         self.plateau.init_plateau(self.joueurs)
-        clock = p.time.Clock()
         ecran = p.display.set_mode((c.LARGEUR, c.HAUTEUR))
         ecran.fill(p.Color("white"))
         p.init()
@@ -223,64 +219,47 @@ class GuiJeu(Jeu):
         charge_images()
         while self.Is_jeu_en_cours:
             for e in p.event.get():
-                if self.gestion_clique(e):  # after 2nd click on joue
+                if self.gestion_clique(e):
                     move = self.clique_vers_coup()
                     print(move)
-                    if self.validation_coup(move, equipe_en_jeu):
-                        # vérifie si format correct et place libre et case pas interdite
-                        if self.is_pas_bonne_equipe(equipe_en_jeu, move):
-                            # vérifie si le pion déplacé est le bon
+                    if self.validation_coup(move, equipe_en_jeu):  # on peut jouer le coup
+                        equipe_drapeau = self.couleur_drapeau()
+                        if self.is_prise_de_drapeau(equipe_drapeau, move):
+                            # si le drapeau est pris, on devra lancer une contre-attaque
+                            self.plateau.deplacement(self.plateau, move, equipe_en_jeu)
+                            contre_attaque_finie = False
                             self.reinitilaise_le_coup()
-                            continue
-                        else:  # on peut jouer le coup
-                            equipe_drapeau = self.couleur_drapeau()
-                            if self.is_prise_de_drapeau(equipe_drapeau, move):
-                                # si le drapeau est pris, on devra lancer une contre-attaque
+                            if engine.is_contre_attaque_sur_flag_possible(self.plateau, equipe_drapeau):
+                                print(" coup possible : ",
+                                      engine.is_contre_attaque_sur_flag_possible(self.plateau, equipe_drapeau))
+                                while not contre_attaque_finie:  # contre-attaque
+                                    for i in p.event.get():
+                                        if self.gestion_clique(i):
+                                            move = self.clique_vers_coup()
+                                            print(move)
+                                            if self.is_pas_bonne_equipe(equipe_drapeau, move):
+                                                self.reinitilaise_le_coup()
+                                                continue
+                                            if move in engine.is_contre_attaque_sur_flag_possible(
+                                                    self.plateau, equipe_drapeau):
+                                                # vérifie si on peut jouer le coup
+                                                self.plateau.deplacement(self.plateau, move, equipe_drapeau)
+                                                contre_attaque_finie = True
+                                                self.reinitilaise_le_coup()
+                                    self.rafraichissement_gui(equipe_drapeau, ecran)
+                                    # fin contre attaque
+
+                        elif not self.is_prise_de_drapeau(equipe_drapeau, move):
+                            # on joue le coup normal
+                            if self.validation_coup(move, equipe_en_jeu):
                                 self.plateau.deplacement(self.plateau, move, equipe_en_jeu)
-                                contre_attaque_finie = False
-                                self.reinitilaise_le_coup()
-                                if engine.is_contre_attaque_sur_flag_possible(self.plateau, equipe_drapeau):
-                                    print(" coup possible :",
-                                          engine.is_contre_attaque_sur_flag_possible(self.plateau, equipe_drapeau))
-                                    while not contre_attaque_finie:  # contre-attaque
-                                        for i in p.event.get():
-                                            if self.gestion_clique(i):  # after 2nd click on joue
-                                                move = self.clique_vers_coup()
-                                                print(move)
-                                                if self.is_pas_bonne_equipe(equipe_drapeau, move):
-                                                    # vérifie si le pion rdt de la bonne équipe
-                                                    self.reinitilaise_le_coup()
-                                                    continue
-                                                if move in engine.is_contre_attaque_sur_flag_possible(
-                                                        self.plateau, equipe_drapeau):
-                                                    # vérifie si on peut jouer le coup
-                                                    self.plateau.deplacement(self.plateau, move, equipe_drapeau)
-                                                    contre_attaque_finie = True
-                                                    self.reinitilaise_le_coup()
-                                        self.rafraichissement_gui(clock, equipe_drapeau, ecran)
-                                        # fin contre attaque
 
-                            elif not self.is_prise_de_drapeau(equipe_drapeau, move):
-                                # on joue le coup normal
-                                if self.validation_coup(move, equipe_en_jeu):
-                                    if equipe_en_jeu != self.plateau.cases[c.COORD.index(move[1:4])].equipe:
-                                        # vérifie si le pion déplacé est le bon
-                                        self.reinitilaise_le_coup()
-                                        continue
-                                    else:  # on peut jouer le coup
-                                        self.plateau.deplacement(self.plateau, move, equipe_en_jeu)
-
-                            equipe_en_jeu = self.actualiser_plateau_fin_de_tour(equipe_en_jeu)
-                            # actualisation des paramètres de la partie
-
-                        self.reinitilaise_le_coup()
-                        # vérifie les règles
+                        equipe_en_jeu = self.actualiser_plateau_fin_de_tour(equipe_en_jeu)
                         self.verif_regle_fin_tour()
-                    else:
-                        print("Coup impossible")
-                        self.reinitilaise_le_coup()
 
-            self.rafraichissement_gui(clock, equipe_en_jeu, ecran)
+                    self.reinitilaise_le_coup()
+
+            self.rafraichissement_gui(equipe_en_jeu, ecran)
 
 
 if __name__ == "__main__":

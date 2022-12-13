@@ -162,7 +162,4 @@ class Plateau:
                     self.cases[c.COORD.index(arrive)] = Piece(nom_piece, equipe)
                     self.cases[c.COORD.index(depart)] = Piece()
 
-        else:
-            print("Coup invalide")
-
         plateau.afficher_plateau()

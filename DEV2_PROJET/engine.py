@@ -12,18 +12,15 @@ def verif_format_coup(coup):
     """
 
     if len(coup) == 0:
-        print("Format non valide")
         return False
     regex = re.compile(r"[pfctd][a-o][01]\d[a-o][01]\d")
     if regex.match(coup) is None:
-        print("Format non valide")
         return False
     depart = coup[1:4]
     arrive = coup[4:7]
     if (depart in c.COORD) and (arrive in c.COORD):
         return True
     else:
-        print("Format non valide")
         return False
 
 
@@ -57,7 +54,6 @@ def is_place_occupee(plateau, coup, equipe):
     """
     arrive = coup[4:7]
     if plateau.cases[c.COORD.index(arrive)].nom != "" and plateau.cases[c.COORD.index(arrive)].equipe == equipe:
-        # Vérifie que la case n'est pas occupée
         return False
     return True
 
@@ -97,8 +93,9 @@ def verif_pion(arrive, case1, case2, liste_deplacement, liste_deplacement_prise,
     Vérifie pour les pion si le mouvement est reglementaire
     :param arrive: la partie de coup qui correspond a son arrivée
     :type arrive: string
-    :param case1 et case2: Couple de cases qui permet de vérifier le déplacement du pion dans la liste
-    :type case1 et case2: Int
+    :param case1, case2: Couple de cases qui permet de vérifier le déplacement du pion dans la liste
+    :type case1: Int
+    :type case2: Int
     :param liste_deplacement: Distance dans lesquels le pion peut se déplacer
     :type liste_deplacement: Liste de int
     :param liste_deplacement_prise: Distance dans lesquels le pion peut se déplacer en prenant en diagonale
@@ -239,10 +236,10 @@ def verif_pion_horizontal_peut_prendre_drapeau(plateau, piece, liste_colonne_pos
     :type plateau: objet de class Plateau
     :param piece: piece dont on vérifie le déplacement
     :type piece: objet piece
-    :param liste_colonne_possible:
-    :type liste_colonne_possible:
-    :param liste_ligne_possible:
-    :type liste_ligne_possible:
+    :param liste_colonne_possible: La liste des colonnes a partir desquels le drapeau peut etre pris par un pion
+    :type liste_colonne_possible: Liste de string
+    :param liste_ligne_possible: La liste des lignes a partir desquels le drapeau peut etre pris par un pion
+    :type liste_ligne_possible: Liste de string
     :return: Si le pion qui se déplacement horizontalement peut prendre ou pas le drapeau
     :rtype: Boolean
     """
@@ -264,8 +261,8 @@ def verif_pion_vertical_peut_prendre_drapeau(plateau, piece, liste_colonne_possi
     :return: Si le pion qui se déplacement vereticalement peut prendre ou pas le drapeau
     :rtype: Boolean
     """
-    return (c.COORD[plateau.cases.index(piece)][0] in liste_colonne_possible) \
-           and int(c.COORD[plateau.cases.index(piece)][1:3]) in liste_ligne_possible
+    return (c.COORD[plateau.cases.index(piece)][0] in liste_colonne_possible) and int(
+        c.COORD[plateau.cases.index(piece)][1:3]) in liste_ligne_possible
 
 
 def is_drapeau_prenable(plateau):

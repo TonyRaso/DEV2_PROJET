@@ -7,9 +7,9 @@ import constante as c
 
 def argument_argparse():
     """
-    Methode qui renvoi les arguments passés en commande sous la forme d'une liste
-    :return: Une liste qui contient les arguments
-    :rtype: Liste
+    Methode qui renvoie les arguments passés en commande sous la forme d'un object
+    :return: Un object qui contient les arguments
+    :rtype: Object ArgumentParser
     """
     parser = argparse.ArgumentParser()
     parser.add_argument("--nombre-joueur", type=int, help="nombre de joueur, entre 2 et 4")
@@ -60,8 +60,8 @@ class Jeu:
         :return: /
         :rtype: /
         """
-        global data_locale
 
+        global data_locale
         self.ajout_score()
         try:
             data_locale = open(c.FICHIER_POINTS)
@@ -139,7 +139,6 @@ class Jeu:
 
         return equipe_en_jeu
 
-
     def verif_regle_fin_tour(self):
         """
         Méthode qui vérifie les conditions des regles a la fin de chaque tour
@@ -149,7 +148,7 @@ class Jeu:
         if self.nmbr_tour_plateau == c.NMBR_MAX_TOUR_VIDE and self.Is_drapeu_neutre:
             # drapeau pas pris avant le 10ème tour de plateau
             for i in range(len(self.joueurs)):  # on met des malus
-                self.points_joueur[self.joueurs[-i]] -= (c.PTS_BONUS_VAINQEUR - c.PTS_PAR_TOUR * i)
+                self.points_joueur[self.joueurs[-i]] -= (c.PTS_BONUS_VAINQEUR - 5 * i)
             self.Is_jeu_en_cours = False
 
         if not self.Is_drapeu_neutre and self.couleur_drapeau() == "white":
@@ -169,10 +168,9 @@ class Jeu:
             # si drapeau n'est pas prenable et que quelqu'un est dessus
             self.fin_partie(self.couleur_drapeau())
 
-
     def validation_coup(self, coup, equipe_en_jeu):
         """
-        Méthode qui valide le coup
+        Méthode qui valide le coup et print l'erreur si le coup n'est pas validé
         :param coup: le déplacement mémorisé via l input main
         :type coup: string
         :param equipe_en_jeu: Une liste qui contient les joueurs de la partie
@@ -180,10 +178,21 @@ class Jeu:
         :return: Renvoi si le coup est jouable grace a toutes les methodes de vérification de engine.py
         :rtype: Boolean
         """
-        return (engine.verif_format_coup(coup) and engine.is_place_occupee(self.plateau, coup, equipe_en_jeu)
-                and engine.is_case_interdit(self.plateau, coup) and
-                engine.verif_deplacement(coup, self.plateau, equipe_en_jeu))
+        if self.is_pas_bonne_equipe(equipe_en_jeu, coup):
+            print("Vous ne possedez pas de pion sur cette case")
+        elif not engine.is_case_interdit(self.plateau, coup):
+            print("Cette case est interdite d'accès !")
+        elif not engine.is_place_occupee(self.plateau, coup, equipe_en_jeu):
+            print("Cette case est occupée par un allié !")
+        elif not engine.verif_format_coup(coup):
+            print("Format non valide")
+        elif not engine.verif_deplacement(coup, self.plateau, equipe_en_jeu):
+            print("Coup impossible")
 
+        return (engine.verif_format_coup(coup) and engine.is_place_occupee(self.plateau, coup, equipe_en_jeu)
+                and engine.is_case_interdit(self.plateau, coup)
+                and engine.verif_deplacement(coup, self.plateau, equipe_en_jeu)
+                and not self.is_pas_bonne_equipe(equipe_en_jeu, coup))
 
     def is_pas_bonne_equipe(self, equipe_en_jeu, move):
         """
@@ -196,7 +205,6 @@ class Jeu:
         :rtype: Boolean
         """
         return equipe_en_jeu != self.plateau.cases[c.COORD.index(move[1:4])].equipe
-
 
     @staticmethod
     def is_prise_de_drapeau(equipe_drapeau, move):
@@ -211,7 +219,6 @@ class Jeu:
         """
         return equipe_drapeau != "white" and move[4:7] == c.CASE_DRAPEAU
 
-
     def couleur_drapeau(self):
         """
         Méthode qui donne la couleur qui occupe le drapeau a ce moment
@@ -219,7 +226,6 @@ class Jeu:
         :rtype: String
         """
         return self.plateau.cases[c.COORD.index(c.CASE_DRAPEAU)].equipe
-
 
     def jeu(self):
         """
@@ -239,40 +245,32 @@ class Jeu:
 
             if self.validation_coup(move, equipe_en_jeu):
                 # vérifie si format correct et place libre et case pas interdite
+                equipe_drapeau = self.couleur_drapeau()
+                if self.is_prise_de_drapeau(equipe_drapeau, move):
+                    # si le drapeau est pris, on devra lancer une contre-attaque
+                    self.plateau.deplacement(self.plateau, move, equipe_en_jeu)
+                    contre_attaque_finie = False
+                    if engine.is_contre_attaque_sur_flag_possible(self.plateau, equipe_drapeau):
+                        print(" coup possible :",
+                              engine.is_contre_attaque_sur_flag_possible(self.plateau, equipe_drapeau))
+                        while not contre_attaque_finie:
+                            print("tour du joueur", equipe_drapeau)
+                            move = input("Quel pièce voulez vous déplacer vers quel case ? "
+                                         "(Format, pf02f03 = pion en f02 vers f03) : ")
 
-                if self.is_pas_bonne_equipe(equipe_en_jeu, move):
-                    # vérifie si le pion déplacé est le bon
-                    print("Vous ne possédez pas de pion sur cette case!")
-                    continue
-                else:
-                    equipe_drapeau = self.couleur_drapeau()
-                    if self.is_prise_de_drapeau(equipe_drapeau, move):
-                        # si le drapeau est pris, on devra lancer une contre-attaque
+                            if self.validation_coup(move, equipe_en_jeu):
+                                self.plateau.deplacement(self.plateau, move, equipe_drapeau)
+                                contre_attaque_finie = True
+
+                elif not self.is_prise_de_drapeau(equipe_drapeau, move):
+                    # on joue le coup normal
+                    if self.validation_coup(move, equipe_en_jeu):  # on peut jouer le coup
                         self.plateau.deplacement(self.plateau, move, equipe_en_jeu)
-                        contre_attaque_finie = False
-                        if engine.is_contre_attaque_sur_flag_possible(self.plateau, equipe_drapeau):
-                            print(" coup possible :",
-                                  engine.is_contre_attaque_sur_flag_possible(self.plateau, equipe_drapeau))
-                            while not contre_attaque_finie:
-                                print("tour du joueur", equipe_drapeau)
-                                move = input("Quel pièce voulez vous déplacer vers quel case ? "
-                                             "(Format, pf02f03 = pion en f02 vers f03) : ")
 
-                                if self.validation_coup(move, equipe_en_jeu):
-                                    self.plateau.deplacement(self.plateau, move, equipe_drapeau)
-                                    contre_attaque_finie = True
-
-                    elif not self.is_prise_de_drapeau(equipe_drapeau, move):
-                        # on joue le coup normal
-                        if self.validation_coup(move, equipe_en_jeu):  # on peut jouer le coup
-                            self.plateau.deplacement(self.plateau, move, equipe_en_jeu)
-
-                    equipe_en_jeu = self.actualiser_plateau_fin_de_tour(equipe_en_jeu)
-                    # actualisation des paramètres de la partie
+                equipe_en_jeu = self.actualiser_plateau_fin_de_tour(equipe_en_jeu)
+                # actualisation des paramètres de la partie
 
                 self.verif_regle_fin_tour()
-            else:
-                print("Coup impossible")
 
 
 if __name__ == "__main__":
