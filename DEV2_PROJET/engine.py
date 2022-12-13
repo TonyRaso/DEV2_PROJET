@@ -64,7 +64,7 @@ def is_place_occupee(plateau, coup, equipe):
 
 def verif_piece_dans_vecteur(plateau, arrive, depart, vecteur):
     """
-    Methode qui recoit la table actuele avec la position initiale d'une piece et sa destination
+    Methode qui recoit la table actuel avec la position initiale d'une piece et sa destination
     et qui va verifier si cette piece a le champ libre pour son déplacement vers sa destination ou pas
     :param plateau: passe la table de jeu en parametre
     :type plateau: objet de class Plateau
@@ -94,21 +94,19 @@ def verif_piece_dans_vecteur(plateau, arrive, depart, vecteur):
 
 def verif_pion(arrive, case1, case2, liste_deplacement, liste_deplacement_prise, plateau):
     """
-
+    Vérifie pour les pion si le mouvement est reglementaire
     :param arrive: la partie de coup qui correspond a son arrivée
     :type arrive: string
-    :param case1:
-    :type case1:
-    :param case2:
-    :type case2:
-    :param liste_deplacement:
-    :type liste_deplacement:
-    :param liste_deplacement_prise:
-    :type liste_deplacement_prise:
-    :param plateau:
-    :type plateau:
-    :return:
-    :rtype:
+    :param case1 et case2: Couple de cases qui permet de vérifier le déplacement du pion dans la liste
+    :type case1 et case2: Int
+    :param liste_deplacement: Distance dans lesquels le pion peut se déplacer
+    :type liste_deplacement: Liste de int
+    :param liste_deplacement_prise: Distance dans lesquels le pion peut se déplacer en prenant en diagonale
+    :type liste_deplacement_prise: Liste de int
+    :param plateau: Passe la table de jeu en parametre
+    :type plateau: Objet de class Plateau
+    :return: Si oui ou non le coup du pion est possible
+    :rtype: Boolean
     """
     if c.COORD.index(case1) - c.COORD.index(case2) in liste_deplacement and \
             plateau.cases[c.COORD.index(arrive)].equipe == "white":
@@ -142,8 +140,9 @@ def verif_deplacement_horizontal(arrive, depart, plateau):
 
 def verif_deplacement_vecteur_et_horizontal(arrive, depart, plateau, vecteur):
     """
-    Methode qui vérifie si le déplacement horizontal et vecteur, est possible grace a la methode verif_deplacement_horizontal
-    sinon verifie si une piece est dans le chemin grace a la methode verif_piece_dans_vecteur
+    Methode qui vérifie si le déplacement horizontal et vecteur, est possible grace a la methode
+    verif_deplacement_horizontal sinon verifie si une piece est dans le chemin grace a la methode
+    verif_piece_dans_vecteur
     :param arrive: la partie de coup qui correspond a son arrivée
     :type arrive: string
     :param depart: la partie de coup qui correspond a son départ
@@ -235,17 +234,17 @@ def is_contre_attaque_sur_flag_possible(plateau, equipe):
 
 def verif_pion_horizontal_peut_prendre_drapeau(plateau, piece, liste_colonne_possible, liste_ligne_possible):
     """
-
+    Méthode qui vérifie si le pion peut prendre le drapeau en se déplacant horizontalement
     :param plateau: passe la table de jeu en parametre
     :type plateau: objet de class Plateau
-    :param piece:
-    :type piece:
+    :param piece: piece dont on vérifie le déplacement
+    :type piece: objet piece
     :param liste_colonne_possible:
     :type liste_colonne_possible:
     :param liste_ligne_possible:
     :type liste_ligne_possible:
-    :return:
-    :rtype:
+    :return: Si le pion qui se déplacement horizontalement peut prendre ou pas le drapeau
+    :rtype: Boolean
     """
     return c.COORD[plateau.cases.index(piece)][0] in liste_colonne_possible and (
             c.COORD[plateau.cases.index(piece)][1:3] in liste_ligne_possible)
@@ -253,17 +252,17 @@ def verif_pion_horizontal_peut_prendre_drapeau(plateau, piece, liste_colonne_pos
 
 def verif_pion_vertical_peut_prendre_drapeau(plateau, piece, liste_colonne_possible, liste_ligne_possible):
     """
-
+    Méthode qui vérifie si le pion peut prendre le drapeau en se déplacant verticalement
     :param plateau: passe la table de jeu en parametre
     :type plateau: objet de class Plateau
-    :param piece:
-    :type piece:
-    :param liste_colonne_possible:
-    :type liste_colonne_possible:
-    :param liste_ligne_possible:
-    :type liste_ligne_possible:
-    :return:
-    :rtype:
+    :param piece: piece dont on vérifie le déplacement
+    :type piece: objet piece
+    :param liste_colonne_possible: La liste des colonnes a partir desquels le drapeau peut etre pris par un pion
+    :type liste_colonne_possible: Liste de string
+    :param liste_ligne_possible: La liste des lignes a partir desquels le drapeau peut etre pris par un pion
+    :type liste_ligne_possible: Liste de string
+    :return: Si le pion qui se déplacement vereticalement peut prendre ou pas le drapeau
+    :rtype: Boolean
     """
     return (c.COORD[plateau.cases.index(piece)][0] in liste_colonne_possible) \
            and int(c.COORD[plateau.cases.index(piece)][1:3]) in liste_ligne_possible
@@ -277,7 +276,7 @@ def is_drapeau_prenable(plateau):
     :return:si quelqu'un a encore la possibilité de prendre le drapeau
     :rtype: boolean
     """
-    equipe_drapeau = plateau.cases[c.COORD.index("h08")].equipe
+    equipe_drapeau = plateau.cases[c.COORD.index(c.CASE_DRAPEAU)].equipe
     for piece in plateau.cases:
         if piece.equipe != equipe_drapeau:
             # on regarde les pièces restantes ennemies
@@ -289,7 +288,7 @@ def is_drapeau_prenable(plateau):
                 if verif_pion_vertical_peut_prendre_drapeau(plateau, piece, ["g", "i"], range(1, 8)):
                     return True
             elif piece.equipe == "blue":
-                if verif_pion_vertical_peut_prendre_drapeau(plateau, piece, ["g", "i"], range(1, 10)):
+                if verif_pion_vertical_peut_prendre_drapeau(plateau, piece, ["g", "i"], range(9, 15)):
                     # dans la bonne colonne et pas au-dessus du drapeau
                     return True
             elif piece.equipe == "red":

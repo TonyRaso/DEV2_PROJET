@@ -2,7 +2,7 @@ import argparse
 import board
 import engine
 import json
-import constante as c 
+import constante as c
 
 
 def argument_argparse():
@@ -117,13 +117,14 @@ class Jeu:
 
     def actualiser_plateau_fin_de_tour(self, equipe_en_jeu):
         """
-        Methode qui set a actualiser le plateau en fin de tour
+        Methode qui donne les points au joueurs detenants le drapeau et qui reinitialise les valeurs du drapeau
+        Elle calcule aussi le prochain joueur et incremente la variable tour
         :param equipe_en_jeu: Une liste qui contient les joueurs de la partie
         :type equipe_en_jeu: Liste de string
-        :return:
-        :rtype:
+        :return: Return le prochain joueur
+        :rtype: String
         """
-         if self.couleur_drapeau() != "white":  # drapeau pris par une équipe
+        if self.couleur_drapeau() != "white":  # drapeau pris par une équipe
             self.points_joueur[self.couleur_drapeau()] += c.PTS_PAR_TOUR
             self.Is_drapeu_neutre = False
             # si le drapeau est pris, compteur de tour de drapeau neutre = 0
@@ -138,11 +139,10 @@ class Jeu:
 
         return equipe_en_jeu
 
+
     def verif_regle_fin_tour(self):
         """
         Méthode qui vérifie les conditions des regles a la fin de chaque tour
-        :param self: ?
-        :type self: ?
         :return: /
         :rtype: /
         """
@@ -169,6 +169,7 @@ class Jeu:
             # si drapeau n'est pas prenable et que quelqu'un est dessus
             self.fin_partie(self.couleur_drapeau())
 
+
     def validation_coup(self, coup, equipe_en_jeu):
         """
         Méthode qui valide le coup
@@ -176,49 +177,49 @@ class Jeu:
         :type coup: string
         :param equipe_en_jeu: Une liste qui contient les joueurs de la partie
         :type equipe_en_jeu: Liste de string
-        :return: ?
-        :rtype: ?
+        :return: Renvoi si le coup est jouable grace a toutes les methodes de vérification de engine.py
+        :rtype: Boolean
         """
         return (engine.verif_format_coup(coup) and engine.is_place_occupee(self.plateau, coup, equipe_en_jeu)
                 and engine.is_case_interdit(self.plateau, coup) and
                 engine.verif_deplacement(coup, self.plateau, equipe_en_jeu))
 
+
     def is_pas_bonne_equipe(self, equipe_en_jeu, move):
         """
-
-        :param self:
-        :type self:
+        Methode qui renvoi la conditon que la case que l'on déplace appartient bien au joueur dont c'est le tour
         :param equipe_en_jeu: Une liste qui contient les joueurs de la partie
         :type equipe_en_jeu: Liste de string
-        :param move:
-        :type move:
-        :return:
-        :rtype:
+        :param move: Le coup
+        :type move: String
+        :return: renvoi false si l'équipe est la bonne
+        :rtype: Boolean
         """
         return equipe_en_jeu != self.plateau.cases[c.COORD.index(move[1:4])].equipe
+
 
     @staticmethod
     def is_prise_de_drapeau(equipe_drapeau, move):
         """
-
-        :param equipe_drapeau:
-        :type equipe_drapeau:
-        :param move:
-        :type move:
-        :return:
-        :rtype:
+        Methode qui determine si le coup joué prend le drapeau occupé (!)
+        :param equipe_drapeau: L'équipe présente sur le drapeau
+        :type equipe_drapeau: String
+        :param move: Le coup
+        :type move: String
+        :return: Renvoi boolean true si il y avait bien un joueur sur le drapeau
+        :rtype: Boolean
         """
-        return equipe_drapeau != "white" and move[4:7] == "h08"
+        return equipe_drapeau != "white" and move[4:7] == c.CASE_DRAPEAU
+
 
     def couleur_drapeau(self):
         """
-
-        :param self:
-        :type self:
-        :return:
-        :rtype:
+        Méthode qui donne la couleur qui occupe le drapeau a ce moment
+        :return: La couleur de l'occupant du drapeau
+        :rtype: String
         """
-        return self.plateau.cases[c.COORD.index("h08")].equipe
+        return self.plateau.cases[c.COORD.index(c.CASE_DRAPEAU)].equipe
+
 
     def jeu(self):
         """

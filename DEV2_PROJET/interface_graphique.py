@@ -10,7 +10,7 @@ IMAGES = {}
 
 def charge_images():
     """
-    initialise un repertoire d'image qui sera appelé une seul fois
+    Methode qui initialise un repertoire d'image qui sera appelé une seule fois
     :return: /
     :rtype: /   
     """
@@ -20,7 +20,7 @@ def charge_images():
 
 def selection_equipe(plateau, equipe_en_jeu, ecran):
     """
-    Souligne en jaune la totalité des pieces du joueur dont c'est le tour
+    Méthode qui souligne en jaune la totalité des pieces du joueur dont c'est le tour
     :param ecran: la fenetre du gui renvoyé par py.game
     :type ecran: Objet de type Surface
     :param plateau: la table dans l état actuelle
@@ -42,7 +42,7 @@ def selection_equipe(plateau, equipe_en_jeu, ecran):
 
 def selection_case(case_cliquee, ecran):
     """
-    Souligne en bleu la case sur laquel on a clické
+    Methode qui souligne en bleu la case sur laquel on a cliqué
     :param case_cliquee:
     :param ecran: la fenetre du gui renvoyé par py.game
     :type ecran: Objet de type Surface
@@ -50,18 +50,18 @@ def selection_case(case_cliquee, ecran):
     :rtype: /
     """
     if case_cliquee != 0:
-        row = int(case_cliquee / 15)
-        col = case_cliquee % 15
+        row = int(case_cliquee / c.DIMENSION)
+        col = case_cliquee % c.DIMENSION
         # highlight selected square
         s = p.Surface((c.TAILLE_CASE, c.TAILLE_CASE))
-        s.set_alpha(90)  # transparency value 0 -> transparent, 255 -> opaque
+        s.set_alpha(c.TRANSPARENCE_GUI)  # transparency value 0 -> transparent, 255 -> opaque
         s.fill(p.Color('blue'))
         ecran.blit(s, (col * c.TAILLE_CASE, row * c.TAILLE_CASE))
 
 
 def draw_game_state(plateau, case_cliquee, equipe_en_jeu, ecran):
     """
-    Responsable de tout les graphismes dans le jeux (utilise selection equipe et selection case)
+    Methode responsable de tout les graphismes dans le jeux (utilise selection équipe et selection case)
     :param ecran: la fenetre du gui renvoyé par py.game
     :type ecran: Objet de type Surface
     :param plateau: la table dans l état actuelle
@@ -82,7 +82,7 @@ def draw_game_state(plateau, case_cliquee, equipe_en_jeu, ecran):
 
 def afficher_plateau(ecran):
     """
-    Dessine les cases blanches et noir
+    Methode qui dessine les cases blanches et noir
     :return: /
     :rtype: /
     """
@@ -97,7 +97,7 @@ def afficher_plateau(ecran):
 
 def draw_pieces(plateau, ecran):
     """
-    Affiche les pieces par dessus les cases
+    Methode qui affiche les pieces par dessus les cases
     :param ecran: la fenetre du gui renvoyé par py.game
     :type ecran: Objet de type Surface
     :param plateau: la table dans l état actuelle
@@ -141,7 +141,7 @@ class GuiJeu(Jeu):
     @staticmethod
     def recuperer_index_clique():
         """
-        Méhode qui récupère les coordonnés de la case cliquée
+        Méthode qui récupère les coordonnés de la case cliquée
         :return: les coordonnés de la case cliquée
         :rtype: Int
         """

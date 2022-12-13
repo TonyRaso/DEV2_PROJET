@@ -39,3 +39,4 @@ NOM_IMAGES = ["Pred", "Cred", "Fred", "Tred", "Dred", "Pblue", "Cblue", "Fblue",
 FICHIER_POINTS = 'data.txt'
 CASE_DRAPEAU = "h08"
 EQUIPE_QUI_COMMENCE = "yellow"
+TRANSPARENCE_GUI =90
