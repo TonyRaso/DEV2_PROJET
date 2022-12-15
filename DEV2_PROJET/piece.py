@@ -1,5 +1,3 @@
-
-
 class Piece:
 
     def __init__(self, nom="", equipe="white", is_drapeau=False, is_premier_coup=True):
